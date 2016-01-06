@@ -2,12 +2,14 @@ package me.anany.weikandian.utils;
 
 import android.util.Log;
 
+import me.anany.weikandian.BuildConfig;
+
 public class LogUtil{
 	
 	static String className;
 	static String methodName;
 	static int lineNumber;
-	static boolean DEBUGGABLE = true; //false/true
+	static boolean DEBUGGABLE = BuildConfig.DEBUG; //false/true
 	
     private LogUtil(){
         /* Protect from instantiations */

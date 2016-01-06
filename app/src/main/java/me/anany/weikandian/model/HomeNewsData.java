@@ -355,5 +355,34 @@ public class HomeNewsData {
         public List<String> getExtra() {
             return extra;
         }
+
+        @Override
+        public String toString() {
+            return "HomeFragmentNewsDataItem{" +
+                    "id='" + id + '\'' +
+                    ", catid='" + catid + '\'' +
+                    ", thumb='" + thumb + '\'' +
+                    ", idx='" + idx + '\'' +
+                    ", account_id='" + account_id + '\'' +
+                    ", isext='" + isext + '\'' +
+                    ", title='" + title + '\'' +
+                    ", read_num='" + read_num + '\'' +
+                    ", like_num='" + like_num + '\'' +
+                    ", share_num='" + share_num + '\'' +
+                    ", wurl='" + wurl + '\'' +
+                    ", video='" + video + '\'' +
+                    ", image_type='" + image_type + '\'' +
+                    ", input_time='" + input_time + '\'' +
+                    ", op_mark='" + op_mark + '\'' +
+                    ", op_mark_iurl='" + op_mark_iurl + '\'' +
+                    ", op_mark_icolor='" + op_mark_icolor + '\'' +
+                    ", account_name='" + account_name + '\'' +
+                    ", url='" + url + '\'' +
+                    ", is_cache='" + is_cache + '\'' +
+                    ", article_type='" + article_type + '\'' +
+                    ", behot_time=" + behot_time +
+                    ", extra=" + extra +
+                    '}';
+        }
     }
 }
