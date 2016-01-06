@@ -6,4 +6,6 @@
     <color name="tab_bg_color">#f4f3ef</color>
     <color name="main_green">#0bbe1a</color>
     <color name="gray">#868686</color>
+    <color name="tv_line">#cacaca</color>
+    <color name="tablayout_bg">#202020</color>
 </resources>

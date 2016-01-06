@@ -131,5 +131,28 @@ public class HomeTitleData {
         public String getRealcount() {
             return realcount;
         }
+
+        @Override
+        public String toString() {
+            return "HomeFragmentTitleItem{" +
+                    "id='" + id + '\'' +
+                    ", name='" + name + '\'' +
+                    ", sname='" + sname + '\'' +
+                    ", pic='" + pic + '\'' +
+                    ", bookcount='" + bookcount + '\'' +
+                    ", description='" + description + '\'' +
+                    ", realcount='" + realcount + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "HomeTitleData{" +
+                "success=" + success +
+                ", error_code='" + error_code + '\'' +
+                ", message='" + message + '\'' +
+                ", items=" + items +
+                '}';
     }
 }
