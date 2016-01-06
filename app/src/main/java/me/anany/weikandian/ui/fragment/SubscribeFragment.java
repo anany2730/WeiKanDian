@@ -1,10 +1,6 @@
 package me.anany.weikandian.ui.fragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
+import me.anany.weikandian.R;
 import me.anany.weikandian.base.BaseFragment;
 
 /**
@@ -13,16 +9,9 @@ import me.anany.weikandian.base.BaseFragment;
  * Email:zhujun2730@gmail.com
  */
 public class SubscribeFragment extends BaseFragment {
-    @Override
-    public View initView(LayoutInflater inflater, ViewGroup container) {
-
-        TextView textView = new TextView(mActivity);
-        textView.setText("SubscribeFragment");
-        return textView;
-    }
 
     @Override
-    public void initData() {
-
+    protected int inflateLayoutId() {
+        return R.layout.view_text;
     }
 }

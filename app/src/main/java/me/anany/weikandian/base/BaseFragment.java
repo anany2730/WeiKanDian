@@ -2,6 +2,7 @@ package me.anany.weikandian.base;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import butterknife.ButterKnife;
+import me.anany.weikandian.App;
 import me.anany.weikandian.utils.LogUtil;
 
 /**
@@ -43,8 +45,8 @@ public abstract class BaseFragment extends RxFragment {
                              Bundle savedInstanceState) {
 
         if (rootView == null) {
-            rootView = initView(inflater, container);
-            ButterKnife.bind(rootView);
+            rootView = inflater.inflate(inflateLayoutId(), container, false);
+            ButterKnife.bind(this, rootView);
         }
 
         /*
@@ -60,20 +62,30 @@ public abstract class BaseFragment extends RxFragment {
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        prepare();
+        initViews();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         LogUtil.e("BaseFragment onResume ---");
-        initData();
     }
 
-    /**
-     * 子类必须实现此方法, 返回一个View对象, 作为当前Fragment的布局来展示.
-     */
-    public abstract View initView(LayoutInflater inflater, ViewGroup container);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
+        final App app = (App) getActivity().getApplication();
+        app.getWatcher().watch(this);
+    }
 
-    /**
-     * 子类需要初始化自己的数据
-     */
-    public abstract void initData();
+    @LayoutRes
+    protected abstract int inflateLayoutId();
 
+    protected void initViews() {}
+
+    protected void prepare(){}
 }

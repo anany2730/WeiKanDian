@@ -1,13 +1,11 @@
 package me.anany.weikandian.ui;
 
 import android.support.v4.app.FragmentTabHost;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.trello.rxlifecycle.ActivityEvent;
 
@@ -31,6 +29,8 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
 
     private long exitTime = 0;
 
+    private ApiService _api;
+
     //定义FragmentTabHost对象
     private FragmentTabHost mTabHost;
 
@@ -38,32 +38,37 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
     private LayoutInflater layoutInflater;
 
     //定义数组来存放Fragment界面
-    private Class fragmentArray[] = {HomeFragment.class, MineFragment.class,
-            SubscribeFragment.class, DiscoverFragment.class, BillboardFragment.class};
+    private Class fragmentArray[] = { HomeFragment.class, MineFragment.class,
+            SubscribeFragment.class, DiscoverFragment.class, BillboardFragment.class };
 
     //定义数组来存放按钮图片
-    private int mImageViewArray[] = {R.drawable.tab_home_btn, R.drawable.tab_subscribe_btn,
+    private int mImageViewArray[] = { R.drawable.tab_home_btn, R.drawable.tab_subscribe_btn,
             R.drawable.tab_billboard_btn,
             R.drawable.tab_discover_btn,
-            R.drawable.tab_mine_btn};
+            R.drawable.tab_mine_btn };
 
     //定义数组来存放文字颜色
-    private int mTextColorArray[] = {R.drawable.tab_home_text_color, R.drawable.tab_subscribe_text_color,
+    private int mTextColorArray[] = { R.drawable.tab_home_text_color, R.drawable.tab_subscribe_text_color,
             R.drawable.tab_billboard_text_color,
             R.drawable.tab_discover_text_color,
-            R.drawable.tab_mine_text_color};
+            R.drawable.tab_mine_text_color };
 
     //Tab选项卡的文字
-    private String mTextviewArray[] = {"首页", "订阅", "排行榜", "发现", "我的"};
+    private String mTextViewArray[] = { "首页", "订阅", "排行榜", "发现", "我的" };
+
+    @Override
+    protected int inflateLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void prepare() {
+        _api = App.getApi();
+    }
 
     @Override
     protected void initViews() {
-
-        setContentView(R.layout.activity_main);
-
-
-        ApiService api = App.getApi();
-        api.getHomeNewsData("WIFI", "2.0.4", "5", "c1005", "Nexus 4", "android", "6416405",
+        _api.getHomeNewsData("WIFI", "2.0.4", "5", "c1005", "Nexus 4", "android", "6416405",
                 "7f08bcd287cc5096", "22", "5.1.1", "1", "1452050427", "9279697", "204",
                 "6b64883a89dbf5c36d669baa1bced5de")
                 .compose(RxApiThread.convert())
@@ -82,13 +87,12 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
             mTabHost.getTabWidget().setShowDividers(0);
         }
 
-
         //得到fragment的个数
         int count = fragmentArray.length;
 
         for (int i = 0; i < count; i++) {
             //为每一个Tab按钮设置图标、文字和内容
-            TabHost.TabSpec tabSpec = mTabHost.newTabSpec(mTextviewArray[i]).setIndicator(getTabItemView(i));
+            TabHost.TabSpec tabSpec = mTabHost.newTabSpec(mTextViewArray[i]).setIndicator(getTabItemView(i));
             //将Tab按钮添加进Tab选项卡中
             mTabHost.addTab(tabSpec, fragmentArray[i], null);
             //设置Tab按钮的背景
@@ -100,6 +104,7 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
     /**
      * 给Tab按钮设置图标和文字
      */
+    @SuppressWarnings("inflateParams")
     private View getTabItemView(int index) {
         View view = layoutInflater.inflate(R.layout.tabhost_item_view, null);
 
@@ -107,28 +112,20 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
         iv_tab_icon.setImageResource(mImageViewArray[index]);
 
         TextView tv_tab_text = (TextView) view.findViewById(R.id.tv_tab_text);
-        tv_tab_text.setText(mTextviewArray[index]);
+        tv_tab_text.setText(mTextViewArray[index]);
         tv_tab_text.setTextColor(getResources().getColorStateList(mTextColorArray[index]));
 
         return view;
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK
-                && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if ((System.currentTimeMillis() - exitTime) > 2000) {
-                Toast.makeText(getApplicationContext(), "再按一次退出程序",
-                        Toast.LENGTH_SHORT).show();
-                exitTime = System.currentTimeMillis();
-            } else {
-                AppManager.getAppManager().AppExit(this);
-                finish();
-                System.exit(0);
-            }
-            return true;
+    public void onBackPressed() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            App.toast("再按一次退出程序");
+            exitTime = System.currentTimeMillis();
+        } else {
+            AppManager.getAppManager().AppExit(this);
         }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -142,7 +139,6 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
                 v.setSelected(false);
             }
         }
-
         supportInvalidateOptionsMenu();
     }
 
