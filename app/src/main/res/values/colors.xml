@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="tab_bg_color">#b9b7b7</color>
+    <color name="tab_bg_color">#e4e0e0</color>
     <color name="main_green">#19da29</color>
     <color name="gray">#868686</color>
 </resources>

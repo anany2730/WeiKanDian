@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/tab_bg_color"
-        android:paddingBottom="5dp">
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp">
 
         <FrameLayout
             android:id="@android:id/tabcontent"

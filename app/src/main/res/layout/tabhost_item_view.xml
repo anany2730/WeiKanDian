@@ -7,9 +7,8 @@
 
     <ImageView
         android:id="@+id/iv_tab_icon"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:padding="4dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/tab_home_btn"></ImageView>
 
     <TextView
@@ -18,6 +17,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="首页"
-        android:textSize="12sp"></TextView>
+        android:textSize="10sp"></TextView>
 
 </LinearLayout>
