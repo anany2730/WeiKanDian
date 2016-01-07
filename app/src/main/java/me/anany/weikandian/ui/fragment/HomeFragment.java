@@ -5,7 +5,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
@@ -19,7 +18,7 @@ import me.anany.weikandian.base.BaseFragment;
 import me.anany.weikandian.model.HomeTitleData;
 import me.anany.weikandian.retrofit.ApiService;
 import me.anany.weikandian.retrofit.RxApiThread;
-import rx.Observable;
+import me.anany.weikandian.ui.pager.HomePager;
 
 /**
  * Created by anany on 16/1/6.
@@ -34,11 +33,50 @@ public class HomeFragment extends BaseFragment {
     @Bind(R.id.vp_home)
     ViewPager vp_home;
 
-    private List<HomeTitleData.HomeFragmentTitleItem> titleItems;
+    private List<HomePager> pagerList;
 
-    private List<String> titleTextList = new ArrayList<String>();
+    private List<String> titleTextList;
 
     private ApiService _api;
+    private List<HomeTitleData.HomeFragmentTitleItem> homeTitleDataItems;
+    private PagerAdapter mAdapter = new PagerAdapter() {
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titleTextList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return titleTextList.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+
+            HomePager homePager = pagerList.get(position);
+
+            View view = null;
+            if (position == 0) {
+                view = homePager.getView("0");
+            } else {
+                view = homePager.getView(homeTitleDataItems.get(position).getId());
+            }
+
+            container.addView(view);
+            return view;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+    };
 
     @Override
     protected int inflateLayoutId() {
@@ -63,67 +101,21 @@ public class HomeFragment extends BaseFragment {
     private void handleResponseData(HomeTitleData homeTitleData) {
 
         // 成功从服务拿到数据、保存到SharePreference
+        titleTextList = new ArrayList<String>();
         titleTextList.add("推荐");
+        pagerList = new ArrayList<HomePager>();
+        pagerList.add(new HomePager(mActivity));
 
-        titleItems = homeTitleData.getItems();
+        homeTitleDataItems = homeTitleData.getItems();
 
-        Observable.from(titleItems)
-                .map(HomeTitleData.HomeFragmentTitleItem::getName)
-                .subscribe(name -> titleTextList.add(name), e -> {},
-                        () -> {
-                            vp_home.setAdapter(mAdapter);//给ViewPager设置适配器
-                            mTabLayout.setupWithViewPager(vp_home);
-                            mTabLayout.setTabsFromPagerAdapter(mAdapter);//给Tabs设置适配器
-                        });
+        for (int i = 0; i < homeTitleDataItems.size(); i++) {
+            pagerList.add(new HomePager(mActivity));
+            titleTextList.add(homeTitleDataItems.get(i).getName());
+        }
 
-//        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-//            @Override
-//            public void onTabSelected(TabLayout.Tab tab) {
-//                vp_home.setCurrentItem(tab.getPosition());
-//            }
-//
-//            @Override
-//            public void onTabUnselected(TabLayout.Tab tab) {
-//
-//            }
-//
-//            @Override
-//            public void onTabReselected(TabLayout.Tab tab) {
-//
-//            }
-//        });
+        vp_home.setAdapter(mAdapter);//给ViewPager设置适配器
+        mTabLayout.setupWithViewPager(vp_home);
+        mTabLayout.setTabsFromPagerAdapter(mAdapter);//给Tabs设置适配器
     }
-
-    private PagerAdapter mAdapter = new PagerAdapter() {
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return titleTextList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return titleTextList.size();
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            TextView tv = new TextView(mActivity);
-            tv.setTextSize(30.f);
-            tv.setText(titleTextList.get(position));
-            container.addView(tv);
-            return tv;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-    };
 
 }

@@ -30,6 +30,15 @@ public class App extends Application {
 
         _instance = this;
 
+//        OkHttpClient okHttpClient = new OkHttpClient();
+//        okHttpClient.interceptors().add(chain -> {
+//            Request request = chain.request();
+//            String url = request.urlString();
+//            Request build = request.newBuilder().url(url + "&").build();
+//            LogUtil.d(build.urlString());
+//            return chain.proceed(build);
+//        });
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ApiService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

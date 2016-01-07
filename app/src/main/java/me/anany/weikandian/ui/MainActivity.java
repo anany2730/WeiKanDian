@@ -7,21 +7,16 @@ import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
-import com.trello.rxlifecycle.ActivityEvent;
-
 import me.anany.weikandian.App;
 import me.anany.weikandian.AppManager;
 import me.anany.weikandian.R;
 import me.anany.weikandian.base.BaseActivity;
-import me.anany.weikandian.model.HomeNewsData;
 import me.anany.weikandian.retrofit.ApiService;
-import me.anany.weikandian.retrofit.RxApiThread;
 import me.anany.weikandian.ui.fragment.BillboardFragment;
 import me.anany.weikandian.ui.fragment.DiscoverFragment;
 import me.anany.weikandian.ui.fragment.HomeFragment;
 import me.anany.weikandian.ui.fragment.MineFragment;
 import me.anany.weikandian.ui.fragment.SubscribeFragment;
-import me.anany.weikandian.utils.LogUtil;
 
 import static android.widget.TabHost.OnTabChangeListener;
 
@@ -68,13 +63,7 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
 
     @Override
     protected void initViews() {
-        _api.getHomeNewsData("WIFI", "2.0.4", "5", "c1005", "Nexus 4", "android", "6416405",
-                "7f08bcd287cc5096", "22", "5.1.1", "1", "1452050427", "9279697", "204",
-                "6b64883a89dbf5c36d669baa1bced5de")
-                .compose(RxApiThread.convert())
-                .compose(bindUntilEvent(ActivityEvent.PAUSE))
-                .map(HomeNewsData::toString)
-                .subscribe(LogUtil::e);
+
 
         //实例化布局对象
         layoutInflater = LayoutInflater.from(this);
@@ -104,7 +93,6 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
     /**
      * 给Tab按钮设置图标和文字
      */
-    @SuppressWarnings("inflateParams")
     private View getTabItemView(int index) {
         View view = layoutInflater.inflate(R.layout.tabhost_item_view, null);
 

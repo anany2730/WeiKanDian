@@ -1,0 +1,7 @@
+<com.handmark.pulltorefresh.library.PullToRefreshListView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lv_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+</com.handmark.pulltorefresh.library.PullToRefreshListView>
+
