@@ -1,10 +1,7 @@
 package me.anany.weikandian.ui.fragment;
 
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
@@ -14,6 +11,7 @@ import java.util.List;
 import butterknife.Bind;
 import me.anany.weikandian.App;
 import me.anany.weikandian.R;
+import me.anany.weikandian.adapter.HomeTitlePagerAdapter;
 import me.anany.weikandian.base.BaseFragment;
 import me.anany.weikandian.model.HomeTitleData;
 import me.anany.weikandian.retrofit.ApiService;
@@ -22,7 +20,9 @@ import me.anany.weikandian.ui.pager.HomePager;
 
 /**
  * Created by anany on 16/1/6.
- * <p>
+ *
+ *   首页新闻 Fragment
+ *
  * Email:zhujun2730@gmail.com
  */
 public class HomeFragment extends BaseFragment {
@@ -38,45 +38,8 @@ public class HomeFragment extends BaseFragment {
     private List<String> titleTextList;
 
     private ApiService _api;
+
     private List<HomeTitleData.HomeFragmentTitleItem> homeTitleDataItems;
-    private PagerAdapter mAdapter = new PagerAdapter() {
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return titleTextList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return titleTextList.size();
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-
-            HomePager homePager = pagerList.get(position);
-
-            View view = null;
-            if (position == 0) {
-                view = homePager.getView("0");
-            } else {
-                view = homePager.getView(homeTitleDataItems.get(position).getId());
-            }
-
-            container.addView(view);
-            return view;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView((View) object);
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-    };
 
     @Override
     protected int inflateLayoutId() {
@@ -98,13 +61,21 @@ public class HomeFragment extends BaseFragment {
                 .subscribe(this::handleResponseData);
     }
 
+    /**
+     *
+     * 处理从服务器获取的顶部Title数据
+     *
+     * @param homeTitleData
+     */
     private void handleResponseData(HomeTitleData homeTitleData) {
 
-        // 成功从服务拿到数据、保存到SharePreference
+        // Title文字的List
         titleTextList = new ArrayList<String>();
-        titleTextList.add("推荐");
+        titleTextList.add("推荐");// 推荐页要单独处理
+
+        // 内容页Pager的List
         pagerList = new ArrayList<HomePager>();
-        pagerList.add(new HomePager(mActivity));
+        pagerList.add(new HomePager(mActivity)); // 推荐页要单独处理
 
         homeTitleDataItems = homeTitleData.getItems();
 
@@ -113,9 +84,10 @@ public class HomeFragment extends BaseFragment {
             titleTextList.add(homeTitleDataItems.get(i).getName());
         }
 
-        vp_home.setAdapter(mAdapter);//给ViewPager设置适配器
+        HomeTitlePagerAdapter titlePagerAdapter = new HomeTitlePagerAdapter(pagerList, homeTitleDataItems, titleTextList);
+        vp_home.setAdapter(titlePagerAdapter);//给ViewPager设置适配器
         mTabLayout.setupWithViewPager(vp_home);
-        mTabLayout.setTabsFromPagerAdapter(mAdapter);//给Tabs设置适配器
+        mTabLayout.setTabsFromPagerAdapter(titlePagerAdapter);//给Tabs设置适配器
     }
 
 }
