@@ -4,6 +4,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import me.anany.weikandian.model.HomeTitleData;
@@ -11,11 +12,11 @@ import me.anany.weikandian.ui.pager.HomePager;
 
 /**
  * Created by anany on 16/1/8.
- *
- *
- *  Tablayout 与 ViewPager 的 Pager数据源
- *
- *  Email:zhujun2730@gmail.com
+ * <p>
+ * <p>
+ * Tablayout 与 ViewPager 的 Pager数据源
+ * <p>
+ * Email:zhujun2730@gmail.com
  */
 public class HomeTitlePagerAdapter extends PagerAdapter {
 
@@ -23,11 +24,12 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
     private List<String> titleTextList;
     private List<HomeTitleData.HomeFragmentTitleItem> homeTitleDataItems;
 
+    private LinkedHashMap<Integer,View> views = new LinkedHashMap<>();
+
     /**
-     *
-     * @param pagerList  内容页Pager的集合
+     * @param pagerList          内容页Pager的集合
      * @param homeTitleDataItems Title的数据源
-     * @param titleTextList Title 文字的集合
+     * @param titleTextList      Title 文字的集合
      */
     public HomeTitlePagerAdapter(List<HomePager> pagerList,
                                  List<HomeTitleData.HomeFragmentTitleItem> homeTitleDataItems,
@@ -52,13 +54,25 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
 
         HomePager homePager = pagerList.get(position);
 
-        View view = null;
+        String titlePostion = null;
 
-        if (position == 0) {
-            view = homePager.getView("0");
-        } else {
-            view = homePager.getView(homeTitleDataItems.get(position).getId());
+        View view = views.get(position);// 从缓存中去取View
+
+        if(view == null) {
+
+            if (position == 0) {
+                titlePostion = "0";
+                view = homePager.getView();
+            } else {
+                titlePostion = homeTitleDataItems.get(position - 1).getId();
+                view = homePager.getView();
+            }
+
+            views.put(position,view);
         }
+
+        homePager.initData(titlePostion);
+        homePager.setPagerHasInitData(true);
 
         container.addView(view);
         return view;
