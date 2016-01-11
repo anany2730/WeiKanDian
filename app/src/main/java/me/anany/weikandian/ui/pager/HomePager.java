@@ -43,6 +43,8 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     private int step = 1;
 
+    private String requestTime;
+
     public HomePager(Context context) {
         mContext = context;
     }
@@ -87,8 +89,12 @@ public class HomePager implements XRecyclerView.LoadingListener {
     public void initData(String position) {
 
         if (!hasInitData) {
+
+            requestTime =
+                    System.currentTimeMillis() + "";
+
             App.getApi().getHomeNewsData("WIFI", "2.0.4", position, "c1005", "Nexus 4", "android", "6416405", "1452480703",
-                    "7f08bcd287cc5096", "22", "5.1.1", System.currentTimeMillis() + "", step+"", "9279697", "9279697", "204",
+                    "7f08bcd287cc5096", "22", "5.1.1",  requestTime, step + "", "9279697", "9279697", "204",
                     "bec53ecbb89477589484bb05cbae74b0")
                     .compose(RxApiThread.convert())
                     .subscribe(this::handleResponseData);
@@ -113,6 +119,9 @@ public class HomePager implements XRecyclerView.LoadingListener {
             homeRecyclerViewAdapter.notifyDataSetChanged();
 
             // TODO 保存HomeNewsData数据到数据库
+
+
+
         } else {
             mRecyclerView.setVisibility(View.GONE);
             tv_error.setVisibility(View.VISIBLE);
@@ -129,7 +138,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
         LogUtil.e("下拉刷新");
 
         setPagerHasInitData(false); // 重置加载状态
-        step ++;
+        step++;
         initData(position);
     }
 

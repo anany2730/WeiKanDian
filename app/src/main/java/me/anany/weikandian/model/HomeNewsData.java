@@ -1,5 +1,6 @@
 package me.anany.weikandian.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  * <p>
  * Email:zhujun2730@gmail.com
  */
-public class HomeNewsData {
+public class HomeNewsData implements Serializable{
 
     /**
      * 请求参数：

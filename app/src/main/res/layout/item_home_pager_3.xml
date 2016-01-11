@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingLeft="10dp"
     android:paddingRight="10dp">
@@ -12,88 +12,100 @@
         android:layout_height="0.5dp"
         android:background="@color/tv_line" />
 
-
-    <TextView
-        android:id="@+id/tv_title"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|left"
-        android:layout_marginTop="10dp"
-        android:text="玩33333333" />
-
-    <ImageView
-        android:id="@+id/iv_main_img"
-        android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:layout_marginTop="5dp" />
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|left"
+            android:layout_marginTop="10dp"
+            android:text="玩第三方第三方第三方第三方"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
         <ImageView
-            android:id="@+id/iv_op_mark"
-            android:layout_centerVertical="true"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:background="@mipmap/ic_hot" />
-
-        <TextView
-            android:textSize="10sp"
-            android:layout_centerVertical="true"
-            android:id="@+id/tv_op_mark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/iv_op_mark"
-            android:text="专题" />
-
-        <TextView
-            android:textSize="10sp"
-            android:id="@+id/tv_account_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/tv_op_mark"
-            android:text="热点资讯大全" />
-
-        <TextView
-            android:textSize="10sp"
-            android:id="@+id/tv_read_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/tv_account_name"
-            android:layout_marginLeft="10dp"
-            android:text="1067" />
-
-        <TextView
-            android:textSize="10sp"
-            android:id="@+id/tv_time"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/iv_main_img"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@id/iv_delete"
-            android:text="刚刚" />
+            android:layout_weight="1" />
 
-        <ImageView
-            android:id="@+id/iv_delete"
-            android:layout_width="20dp"
-            android:layout_height="12dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_gravity="right"
-            android:background="@mipmap/ic_article_delete" />
-    </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_op_mark"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_centerVertical="true"
+                android:background="@mipmap/ic_hot" />
+
+            <TextView
+                android:id="@+id/tv_op_mark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@id/iv_op_mark"
+                android:text="专题"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tv_account_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/tv_op_mark"
+                android:text="热点资讯大全"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tv_read_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/tv_account_name"
+                android:text="1067"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@id/iv_delete"
+                android:text="刚刚"
+                android:textSize="10sp" />
+
+            <ImageView
+                android:id="@+id/iv_delete"
+                android:layout_width="20dp"
+                android:layout_height="12dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="right"
+                android:background="@mipmap/ic_article_delete" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
 
 </LinearLayout>
+
