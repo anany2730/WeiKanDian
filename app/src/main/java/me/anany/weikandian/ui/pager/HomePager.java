@@ -14,6 +14,7 @@ import me.anany.weikandian.App;
 import me.anany.weikandian.R;
 import me.anany.weikandian.adapter.HomeRecyclerViewAdapter;
 import me.anany.weikandian.model.HomeNewsData;
+import me.anany.weikandian.model.HomeNewsDataItem;
 import me.anany.weikandian.retrofit.RxApiThread;
 import me.anany.weikandian.utils.LogUtil;
 
@@ -38,7 +39,9 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     private HomeRecyclerViewAdapter homeRecyclerViewAdapter;
     private TextView tv_error;
-    private List<HomeNewsData.HomeFragmentNewsDataItem> items;
+    private List<HomeNewsDataItem> items;
+
+    private int step = 1;
 
     public HomePager(Context context) {
         mContext = context;
@@ -63,7 +66,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     public void initRefresh() {
 
-        items = new ArrayList<HomeNewsData.HomeFragmentNewsDataItem>();
+        items = new ArrayList<HomeNewsDataItem>();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -84,9 +87,9 @@ public class HomePager implements XRecyclerView.LoadingListener {
     public void initData(String position) {
 
         if (!hasInitData) {
-            App.getApi().getHomeNewsData("WIFI", "2.0.4", position, "c1005", "Nexus 4", "android", "6416405", "1452161771",
-                    "7f08bcd287cc5096", "22", "5.1.1", "1", "1452050427", "9", "9279697", "204",
-                    "6b64883a89dbf5c36d669baa1bced5de")
+            App.getApi().getHomeNewsData("WIFI", "2.0.4", position, "c1005", "Nexus 4", "android", "6416405", "1452480703",
+                    "7f08bcd287cc5096", "22", "5.1.1", System.currentTimeMillis() + "", step+"", "9279697", "9279697", "204",
+                    "bec53ecbb89477589484bb05cbae74b0")
                     .compose(RxApiThread.convert())
                     .subscribe(this::handleResponseData);
         } else {
@@ -100,7 +103,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
      * @param homeNewsData
      */
     private void handleResponseData(HomeNewsData homeNewsData) {
-
+        mRecyclerView.refreshComplete();
         if (homeNewsData != null && homeNewsData.getItems() != null) {
             tv_error.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
@@ -108,6 +111,8 @@ public class HomePager implements XRecyclerView.LoadingListener {
             items.clear();
             items.addAll(homeNewsData.getItems());
             homeRecyclerViewAdapter.notifyDataSetChanged();
+
+            // TODO 保存HomeNewsData数据到数据库
         } else {
             mRecyclerView.setVisibility(View.GONE);
             tv_error.setVisibility(View.VISIBLE);
@@ -121,11 +126,16 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     @Override
     public void onRefresh() {
-        // TODO 下拉刷新
+        LogUtil.e("下拉刷新");
+
+        setPagerHasInitData(false); // 重置加载状态
+        step ++;
+        initData(position);
     }
 
     @Override
     public void onLoadMore() {
         // TODO 上拉刷新
+        LogUtil.e("上拉刷新");
     }
 }

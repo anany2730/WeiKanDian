@@ -4,10 +4,10 @@ import java.util.List;
 
 /**
  * Created by anany on 16/1/6.
- * <p/>
- *
- *  首页新闻列表 【推荐/笑话/美文/健康】
- *
+ * <p>
+ * <p>
+ * 首页新闻列表 【推荐/笑话/美文/健康】
+ * <p>
  * Email:zhujun2730@gmail.com
  */
 public class HomeNewsData {
@@ -75,62 +75,62 @@ public class HomeNewsData {
      * behot_time : 1452046036
      */
 
-    private List<HomeFragmentNewsDataItem> items;
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public void setError_code(String error_code) {
-        this.error_code = error_code;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public void setStep(int step) {
-        this.step = step;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
-    }
-
-    public void setStime(String stime) {
-        this.stime = stime;
-    }
-
-    public void setItems(List<HomeFragmentNewsDataItem> items) {
-        this.items = items;
-    }
+    private List<HomeNewsDataItem> items;
 
     public boolean isSuccess() {
         return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
     public String getError_code() {
         return error_code;
     }
 
+    public void setError_code(String error_code) {
+        this.error_code = error_code;
+    }
+
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public int getStep() {
         return step;
     }
 
+    public void setStep(int step) {
+        this.step = step;
+    }
+
     public int getCount() {
         return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     public String getStime() {
         return stime;
     }
 
-    public List<HomeFragmentNewsDataItem> getItems() {
+    public void setStime(String stime) {
+        this.stime = stime;
+    }
+
+    public List<HomeNewsDataItem> getItems() {
         return items;
+    }
+
+    public void setItems(List<HomeNewsDataItem> items) {
+        this.items = items;
     }
 
     @Override
@@ -144,245 +144,5 @@ public class HomeNewsData {
                 ", stime='" + stime + '\'' +
                 ", items=" + items +
                 '}';
-    }
-
-    public static class HomeFragmentNewsDataItem {
-
-        private String id;
-        private String catid;
-        private String thumb;
-        private String idx;
-        private String account_id;
-        private String isext;
-        private String title;
-        private String read_num;
-        private String like_num;
-        private String share_num;
-        private String wurl;
-        private String video;
-        private String image_type;
-        private String input_time;
-        private String op_mark;
-        private String op_mark_iurl;
-        private String op_mark_icolor;
-        private String account_name;
-        private String url;
-        private String is_cache;
-        private String article_type;
-        private int behot_time;
-        private List<String> extra;
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public void setCatid(String catid) {
-            this.catid = catid;
-        }
-
-        public void setThumb(String thumb) {
-            this.thumb = thumb;
-        }
-
-        public void setIdx(String idx) {
-            this.idx = idx;
-        }
-
-        public void setAccount_id(String account_id) {
-            this.account_id = account_id;
-        }
-
-        public void setIsext(String isext) {
-            this.isext = isext;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public void setRead_num(String read_num) {
-            this.read_num = read_num;
-        }
-
-        public void setLike_num(String like_num) {
-            this.like_num = like_num;
-        }
-
-        public void setShare_num(String share_num) {
-            this.share_num = share_num;
-        }
-
-        public void setWurl(String wurl) {
-            this.wurl = wurl;
-        }
-
-        public void setVideo(String video) {
-            this.video = video;
-        }
-
-        public void setImage_type(String image_type) {
-            this.image_type = image_type;
-        }
-
-        public void setInput_time(String input_time) {
-            this.input_time = input_time;
-        }
-
-        public void setOp_mark(String op_mark) {
-            this.op_mark = op_mark;
-        }
-
-        public void setOp_mark_iurl(String op_mark_iurl) {
-            this.op_mark_iurl = op_mark_iurl;
-        }
-
-        public void setOp_mark_icolor(String op_mark_icolor) {
-            this.op_mark_icolor = op_mark_icolor;
-        }
-
-        public void setAccount_name(String account_name) {
-            this.account_name = account_name;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        public void setIs_cache(String is_cache) {
-            this.is_cache = is_cache;
-        }
-
-        public void setArticle_type(String article_type) {
-            this.article_type = article_type;
-        }
-
-        public void setBehot_time(int behot_time) {
-            this.behot_time = behot_time;
-        }
-
-        public void setExtra(List<String> extra) {
-            this.extra = extra;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getCatid() {
-            return catid;
-        }
-
-        public String getThumb() {
-            return thumb;
-        }
-
-        public String getIdx() {
-            return idx;
-        }
-
-        public String getAccount_id() {
-            return account_id;
-        }
-
-        public String getIsext() {
-            return isext;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public String getRead_num() {
-            return read_num;
-        }
-
-        public String getLike_num() {
-            return like_num;
-        }
-
-        public String getShare_num() {
-            return share_num;
-        }
-
-        public String getWurl() {
-            return wurl;
-        }
-
-        public String getVideo() {
-            return video;
-        }
-
-        public String getImage_type() {
-            return image_type;
-        }
-
-        public String getInput_time() {
-            return input_time;
-        }
-
-        public String getOp_mark() {
-            return op_mark;
-        }
-
-        public String getOp_mark_iurl() {
-            return op_mark_iurl;
-        }
-
-        public String getOp_mark_icolor() {
-            return op_mark_icolor;
-        }
-
-        public String getAccount_name() {
-            return account_name;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public String getIs_cache() {
-            return is_cache;
-        }
-
-        public String getArticle_type() {
-            return article_type;
-        }
-
-        public int getBehot_time() {
-            return behot_time;
-        }
-
-        public List<String> getExtra() {
-            return extra;
-        }
-
-        @Override
-        public String toString() {
-            return "HomeFragmentNewsDataItem{" +
-                    "id='" + id + '\'' +
-                    ", catid='" + catid + '\'' +
-                    ", thumb='" + thumb + '\'' +
-                    ", idx='" + idx + '\'' +
-                    ", account_id='" + account_id + '\'' +
-                    ", isext='" + isext + '\'' +
-                    ", title='" + title + '\'' +
-                    ", read_num='" + read_num + '\'' +
-                    ", like_num='" + like_num + '\'' +
-                    ", share_num='" + share_num + '\'' +
-                    ", wurl='" + wurl + '\'' +
-                    ", video='" + video + '\'' +
-                    ", image_type='" + image_type + '\'' +
-                    ", input_time='" + input_time + '\'' +
-                    ", op_mark='" + op_mark + '\'' +
-                    ", op_mark_iurl='" + op_mark_iurl + '\'' +
-                    ", op_mark_icolor='" + op_mark_icolor + '\'' +
-                    ", account_name='" + account_name + '\'' +
-                    ", url='" + url + '\'' +
-                    ", is_cache='" + is_cache + '\'' +
-                    ", article_type='" + article_type + '\'' +
-                    ", behot_time=" + behot_time +
-                    ", extra=" + extra +
-                    '}';
-        }
     }
 }

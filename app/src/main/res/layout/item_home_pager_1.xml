@@ -27,6 +27,8 @@
 
 
             <TextView
+                android:textColor="@color/black"
+                android:textStyle="bold"
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,6 +48,7 @@
                 android:layout_alignParentStart="true">
 
                 <TextView
+                    android:textSize="10sp"
                     android:id="@+id/tv_account_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -57,6 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="10dp"
+                    android:textSize="10sp"
                     android:layout_toRightOf="@+id/tv_account_name"
                     android:text="1067" />
 
@@ -75,6 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
+                    android:textSize="10sp"
                     android:layout_toLeftOf="@id/iv_delete"
                     android:text="刚刚" />
 
@@ -86,7 +91,7 @@
 
 
         <ImageView
-            android:background="@mipmap/ic_launcher"
+
             android:id="@+id/iv_main_img"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center"

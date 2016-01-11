@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import me.anany.weikandian.R;
-import me.anany.weikandian.model.HomeNewsData;
+import me.anany.weikandian.model.HomeNewsDataItem;
 
 /**
  * Created by anany on 16/1/7.
@@ -24,10 +26,10 @@ import me.anany.weikandian.model.HomeNewsData;
 public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
-    private List<HomeNewsData.HomeFragmentNewsDataItem> items;
+    private List<HomeNewsDataItem> items;
     private Context context;
 
-    public HomeRecyclerViewAdapter(Context context, List<HomeNewsData.HomeFragmentNewsDataItem> items) {
+    public HomeRecyclerViewAdapter(Context context, List<HomeNewsDataItem> items) {
         this.items = items;
         this.context = context;
     }
@@ -87,7 +89,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        HomeNewsData.HomeFragmentNewsDataItem item = items.get(position);
+        HomeNewsDataItem item = items.get(position);
 
         switch (getItemViewType(position)) {
             case 1:
@@ -95,18 +97,39 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
                 viewHolder1.tv_title.setText(item.getTitle());
                 viewHolder1.tv_account_name.setText(item.getAccount_name());
                 viewHolder1.tv_read_num.setText("阅读 "+item.getRead_num());
+
+                Glide.with(context)
+                        .load(item.getThumb())
+                        .into(viewHolder1.iv_main_img);
+
                 break;
             case 2:
                 ViewHolder2 viewHolder2 = (ViewHolder2) holder;
                 viewHolder2.tv_title.setText(item.getTitle());
                 viewHolder2.tv_account_name.setText(item.getAccount_name());
                 viewHolder2.tv_read_num.setText("阅读 "+item.getRead_num());
+
+                Glide.with(context)
+                    .load(item.getExtra().get(0))
+                    .into(viewHolder2.iv_main_img1);
+
+                Glide.with(context)
+                        .load(item.getExtra().get(1))
+                        .into(viewHolder2.iv_main_img2);
+
+                Glide.with(context)
+                        .load(item.getExtra().get(2))
+                        .into(viewHolder2.iv_main_img3);
                 break;
             case 3:
                 ViewHolder3 viewHolder3 = (ViewHolder3) holder;
                 viewHolder3.tv_title.setText(item.getTitle());
                 viewHolder3.tv_account_name.setText(item.getAccount_name());
                 viewHolder3.tv_read_num.setText(item.getRead_num());
+
+                Glide.with(context)
+                        .load(item.getThumb())
+                        .into(viewHolder3.iv_main_img);
                 break;
         }
     }
