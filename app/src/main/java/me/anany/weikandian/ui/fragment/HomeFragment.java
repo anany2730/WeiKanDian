@@ -17,17 +17,12 @@ import me.anany.weikandian.R;
 import me.anany.weikandian.adapter.HomeTitlePagerAdapter;
 import me.anany.weikandian.base.BaseFragment;
 import me.anany.weikandian.model.HomeTitleData;
-import me.anany.weikandian.retrofit.ApiService;
 import me.anany.weikandian.retrofit.RxApiThread;
 import me.anany.weikandian.ui.pager.HomePager;
-import me.anany.weikandian.utils.LogUtil;
 
 /**
- * Created by anany on 16/1/6.
- * <p>
- * 首页新闻 Fragment
- * <p>
- * <p>
+ * Created by anany on 16/1/6.  首页新闻 Fragment
+ *
  * Email:zhujun2730@gmail.com
  */
 public class HomeFragment extends BaseFragment {
@@ -38,13 +33,8 @@ public class HomeFragment extends BaseFragment {
     @Bind(R.id.vp_home)
     ViewPager vp_home;
 
-    private List<HomePager> pagerList;
-
     private List<String> titleTextList;
 
-    private ApiService _api;
-
-    private List<HomeTitleData.HomeFragmentTitleItem> homeTitleDataItems;
 
     private boolean hasInitData = false;
 
@@ -54,63 +44,63 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    protected void prepare() {
-        _api = App.getApi();
-    }
-
-    @Override
     protected void initViews() {
 
         if (!hasInitData) {
 
-            _api.getHomeNewsTitle("WIFI", "2.0.4", "c1005", "Nexus 4", "android", "6416405",
+            App.getApi().getHomeNewsTitle("WIFI", "2.0.4", "c1005", "Nexus 4", "android", "6416405",
                     "7f08bcd287cc5096", "22", "5.1.1", "1", "1452050427", "9279697", "204",
                     "6b64883a89dbf5c36d669baa1bced5de")
                     .compose(RxApiThread.convert())
                     .compose(bindUntilEvent(FragmentEvent.PAUSE))
                     .subscribe(this::handleResponseData);
-        } else {
-            LogUtil.v("HomeFragment has initData");
+
         }
     }
 
     /**
      * 处理从服务器获取的顶部Title数据
      *
-     * @param homeTitleData
+     * @param homeTitleData 服务器返回的bean
      */
     private void handleResponseData(HomeTitleData homeTitleData) {
 
         hasInitData = true;
 
         // Title文字的List
-        titleTextList = new ArrayList<String>();
+        titleTextList = new ArrayList<>();
         titleTextList.add("推荐");// 推荐页要单独处理
 
         // 内容页Pager的List
-        pagerList = new ArrayList<HomePager>();
+        List<HomePager> pagerList = new ArrayList<>();
         pagerList.add(new HomePager(mActivity)); // 推荐页要单独处理
 
-        homeTitleDataItems = homeTitleData.getItems();
+        List<HomeTitleData.HomeFragmentTitleItem> homeTitleDataItems =
+                homeTitleData.getItems();
 
         for (int i = 0; i < homeTitleDataItems.size(); i++) {
             pagerList.add(new HomePager(mActivity));
             titleTextList.add(homeTitleDataItems.get(i).getName());
         }
 
-        saveHomeTitleDataToDB();
-
         HomeTitlePagerAdapter titlePagerAdapter =
                 new HomeTitlePagerAdapter(pagerList, homeTitleDataItems, titleTextList);
-        vp_home.setAdapter(titlePagerAdapter);//给ViewPager设置适配器
+
+        //给ViewPager设置适配器
+        vp_home.setAdapter(titlePagerAdapter);
         mTabLayout.setupWithViewPager(vp_home);
-        mTabLayout.setTabsFromPagerAdapter(titlePagerAdapter);//给Tabs设置适配器
+
+        //给Tabs设置适配器
+        mTabLayout.setTabsFromPagerAdapter(titlePagerAdapter);
+
+        saveHomeTitleDataToDB();
     }
 
     /**
      * 保存Title数据到数据库
      */
     private void saveHomeTitleDataToDB() {
+
         DaoSession daoSession = App.getDaoSession(mActivity);
         HomeTitleDBDao homeTitleDao = daoSession.getHomeTitleDBDao();
 
@@ -119,8 +109,7 @@ public class HomeFragment extends BaseFragment {
             HomeTitleDB homeTitle = new HomeTitleDB();
             homeTitle.setName(name);
 
-            long insert = homeTitleDao.insert(homeTitle);
-            //LogUtil.e("插入Title数据库：" + insert);
+            homeTitleDao.insert(homeTitle);
         }
     }
 }

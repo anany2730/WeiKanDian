@@ -12,10 +12,10 @@ import me.anany.weikandian.ui.pager.HomePager;
 
 /**
  * Created by anany on 16/1/8.
- * <p>
- * <p>
+ *
+ *
  * Tablayout 与 ViewPager 的 Pager数据源
- * <p>
+ *
  * Email:zhujun2730@gmail.com
  */
 public class HomeTitlePagerAdapter extends PagerAdapter {
@@ -54,7 +54,7 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
 
         HomePager homePager = pagerList.get(position);
 
-        String catid = null;
+        String catid;
 
         View view = views.get(position);// 从缓存中去取View
 

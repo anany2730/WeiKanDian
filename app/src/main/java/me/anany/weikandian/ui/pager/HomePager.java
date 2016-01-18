@@ -24,14 +24,17 @@ import me.anany.weikandian.utils.LogUtil;
 
 /**
  * Created by anany on 16/1/7.
- * <p>
- * <p>
+ *
+ *
  * ViewPager 适配器 填充的 Pager【返回View给HomeTitlePagerAdapter适配器】
- * <p>
- * <p>
+ *
+ *
  * Email:zhujun2730@gmail.com
  */
 public class HomePager implements XRecyclerView.LoadingListener {
+
+    private static final int LOAD_MORE = 1;
+    private static final int PULL_TO_REFRESH = 0;
 
     public Context mContext;
 
@@ -39,7 +42,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     private boolean hasInitData = false;
 
-    private String catid;// 传入顶部Title的ID，用来分别获取每页Pager的数据
+    private String catId;// 传入顶部Title的ID，用来分别获取每页Pager的数据
 
     private HomeRecyclerViewAdapter homeRecyclerViewAdapter;
     private TextView tv_error;
@@ -70,7 +73,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     public void initRefresh() {
 
-        items = new ArrayList<HomeNewsDataItem>();
+        items = new ArrayList<>();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -83,11 +86,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
         mRecyclerView.setLoadingListener(this);
     }
 
-    /**
-     * 设置Pager 已经加载过了【避免重复加载】
-     *
-     * @param hasInitData
-     */
+
     public void setPagerHasInitData(boolean hasInitData) {
         this.hasInitData = hasInitData;
     }
@@ -95,34 +94,27 @@ public class HomePager implements XRecyclerView.LoadingListener {
     /**
      * 加载每个Pager的内容数据
      *
-     * @param catid 每页Pager的 catid
+     * @param catId 每页Pager的 catid
      */
-    public void initData(String catid) {
+    public void initData(String catId) {
 
-        this.catid = catid;
+        this.catId = catId;
 
-        LogUtil.e(catid);
+        LogUtil.e(catId);
 
         if (!hasInitData) {
 
             requestTime =
                     System.currentTimeMillis() + "";
 
-            App.getApi().getHomeNewsData("WIFI", "2.0.4", catid, "c1005", "Nexus 4", "android", "6416405", "1452480703",
+            App.getApi().getHomeNewsData("WIFI", "2.0.4", catId, "c1005", "Nexus 4", "android", "6416405", "1452480703",
                     "7f08bcd287cc5096", "22", "5.1.1", "2", requestTime, step + "", "9279697", "355136051237892", "204",
                     "bec53ecbb89477589484bb05cbae74b0")
                     .compose(RxApiThread.convert())
                     .subscribe(this::handleResponseData);
-        } else {
-            LogUtil.e("pager has initData");
         }
     }
 
-    /**
-     * 处理服务器返回的 首页每页Pager的列表数据源
-     *
-     * @param homeNewsData
-     */
     private void handleResponseData(HomeNewsData homeNewsData) {
 
         if (homeNewsData != null && homeNewsData.getItems() != null) {
@@ -133,8 +125,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
             items.addAll(homeNewsData.getItems());
             homeRecyclerViewAdapter.notifyDataSetChanged();
 
-            // TODO 保存HomeNewsData数据到数据库
-            saveDataToDB(0, homeNewsData.getItems());
+            saveDataToDB(PULL_TO_REFRESH, homeNewsData.getItems());
 
         } else {
             mRecyclerView.setVisibility(View.GONE);
@@ -154,19 +145,20 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         if (type == 0) {
 
-            String sql = "delete from  HomeItemDB where position = " + catid;
+            String sql = "delete from  HomeItemDB where position = " + catId;
 
             daoSession.getDatabase().execSQL(sql);
 
         }
 
-        for (HomeNewsDataItem bean : homeNewsDataItems) {
+        for (HomeNewsDataItem homeNewsDataItem : homeNewsDataItems) {
 
             HomeItemDB homeItemDB = new HomeItemDB();
-            homeItemDB.setPosition(catid);
+            homeItemDB.setPosition(catId);
             homeItemDB.setCt(requestTime);
-            long insert = homeNewsDataItemDao.insert(homeItemDB);
-            //LogUtil.e("插入数据库：" + insert);
+            homeItemDB.setCatid(homeNewsDataItem.getCatid());
+
+            homeNewsDataItemDao.insert(homeItemDB);
         }
     }
 
@@ -181,36 +173,34 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         step++;
 
-        initData(catid);
+        initData(catId);
     }
 
     @Override
     public void onLoadMore() {
-        // TODO 上拉刷新
 
         LogUtil.e("上拉刷新");
 
         DaoSession daoSession = App.getDaoSession(mContext);
-       // HomeItemDBDao homeNewsDataItemDao = daoSession.getHomeItemDBDao();
 
-        String sql = "select * from  HomeItemDB where position = " + catid;
+        String sql = "select * from  HomeItemDB where position = " + catId;
 
         Cursor cursor = daoSession.getDatabase().rawQuery(sql, null);
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToNext();
+
             String columnName = cursor.getString(4);
 
             LogUtil.e("数据库：" + columnName);
 
-            getDataMore(catid, columnName);
+            getDataMore(catId, columnName);
 
+            cursor.close();
         } else {
             mRecyclerView.loadMoreComplete();
         }
 
-
-        // LogUtil.e("查询出来的数据："+dbBean.getCt());
     }
 
     /**
@@ -220,7 +210,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
      */
     public void getDataMore(String catid, String maxTime) {
 
-        this.catid = catid;
+        this.catId = catid;
         this.requestTime = System.currentTimeMillis() + "";
 
 
@@ -232,11 +222,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     }
 
-    /**
-     * 处理服务器返回更多的 首页每页Pager的列表数据源
-     *
-     * @param homeNewsData
-     */
+
     private void handleResponseDataMore(HomeNewsData homeNewsData) {
 
         if (homeNewsData != null && homeNewsData.getItems() != null) {
@@ -247,8 +233,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
             items.addAll(homeNewsData.getItems());
             homeRecyclerViewAdapter.notifyDataSetChanged();
 
-            // TODO 保存更多的数据到数据库
-            saveDataToDB(1, homeNewsData.getItems());
+            saveDataToDB(LOAD_MORE, homeNewsData.getItems());
 
         }
 
