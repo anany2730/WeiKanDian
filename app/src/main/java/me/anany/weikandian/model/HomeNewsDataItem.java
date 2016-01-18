@@ -39,7 +39,7 @@ public class HomeNewsDataItem implements Serializable {
     private String url;
     private String is_cache;
     private String article_type;
-    private int behot_time;
+    private long behot_time;
     private List<String> extra;
     private String extraImg;
 
@@ -243,7 +243,7 @@ public class HomeNewsDataItem implements Serializable {
         this.article_type = article_type;
     }
 
-    public int getBehot_time() {
+    public long getBehot_time() {
         return behot_time;
     }
 

@@ -45,14 +45,16 @@ public abstract class BaseFragment extends RxFragment {
                              Bundle savedInstanceState) {
 
         if (rootView == null) {
+            LogUtil.v("BaseFragment InflateView ---");
             rootView = inflater.inflate(inflateLayoutId(), container, false);
             ButterKnife.bind(this, rootView);
         }
 
-        /*
-        缓存的rootView需要判断是否已经被加过parent，
-        如果有parent需要从parent删除，
-        要不然会发生这个rootview已经有parent的错误。
+        /**
+         *
+         *   缓存的rootView需要判断是否已经被加过parent，
+         *   如果有parent需要从parent删除，
+         *   要不然会发生这个rootview已经有parent的错误。
          */
         ViewGroup parent = (ViewGroup) rootView.getParent();
         if (parent != null) {
@@ -63,6 +65,7 @@ public abstract class BaseFragment extends RxFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
         prepare();
         initViews();
@@ -71,7 +74,6 @@ public abstract class BaseFragment extends RxFragment {
     @Override
     public void onResume() {
         super.onResume();
-        LogUtil.e("BaseFragment onResume ---");
     }
 
     @Override

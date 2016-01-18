@@ -1,6 +1,7 @@
 package me.anany.weikandian;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
@@ -8,6 +9,8 @@ import android.widget.Toast;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
+import me.anany.dao.DaoMaster;
+import me.anany.dao.DaoSession;
 import me.anany.weikandian.retrofit.ApiService;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;
@@ -23,6 +26,9 @@ public class App extends Application {
     private static App _instance;
 
     private RefWatcher _watcher;
+
+    private static DaoMaster daoMaster;
+    private static DaoSession daoSession;
 
     @Override
     public void onCreate() {
@@ -56,6 +62,36 @@ public class App extends Application {
 
     public RefWatcher getWatcher(){
         return _watcher;
+    }
+
+    /**
+     * 取得DaoMaster
+     *
+     * @param context
+     * @return
+     */
+    public static DaoMaster getDaoMaster(Context context) {
+        if (daoMaster == null) {
+            DaoMaster.OpenHelper helper = new DaoMaster.DevOpenHelper(context,Constants.DB_NAME, null);
+            daoMaster = new DaoMaster(helper.getWritableDatabase());
+        }
+        return daoMaster;
+    }
+
+    /**
+     * 取得DaoSession
+     *
+     * @param context
+     * @return
+     */
+    public static DaoSession getDaoSession(Context context) {
+        if (daoSession == null) {
+            if (daoMaster == null) {
+                daoMaster = getDaoMaster(context);
+            }
+            daoSession = daoMaster.newSession();
+        }
+        return daoSession;
     }
 
     /**

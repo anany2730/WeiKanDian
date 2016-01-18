@@ -24,7 +24,7 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
     private List<String> titleTextList;
     private List<HomeTitleData.HomeFragmentTitleItem> homeTitleDataItems;
 
-    private LinkedHashMap<Integer,View> views = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, View> views = new LinkedHashMap<>();
 
     /**
      * @param pagerList          内容页Pager的集合
@@ -54,24 +54,24 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
 
         HomePager homePager = pagerList.get(position);
 
-        String titlePostion = null;
+        String catid = null;
 
         View view = views.get(position);// 从缓存中去取View
 
-        if(view == null) {
-
-            if (position == 0) {
-                titlePostion = "0";
-                view = homePager.getView();
-            } else {
-                titlePostion = homeTitleDataItems.get(position - 1).getId();
-                view = homePager.getView();
-            }
-
-            views.put(position,view);
+        if (position == 0) {
+            catid = "0"; // 每页请求的catid
+        } else {
+            catid = homeTitleDataItems.get(position - 1).getId();
         }
 
-        homePager.initData(titlePostion);
+        if (view == null) {
+
+            view = homePager.getView();
+
+            views.put(position, view);
+        }
+
+        homePager.initData(catid);
         homePager.setPagerHasInitData(true);
 
         container.addView(view);
