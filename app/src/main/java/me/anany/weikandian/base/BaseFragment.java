@@ -90,4 +90,8 @@ public abstract class BaseFragment extends RxFragment {
     protected void initViews() {}
 
     protected void prepare(){}
+
+    public View getRootView(){
+        return rootView;
+    }
 }

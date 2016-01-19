@@ -33,7 +33,7 @@ public class HomeTitleData {
      * realcount : 6690
      */
 
-    private List<HomeFragmentTitleItem> items;
+    private List<HomeTitleItem> items;
 
     public void setSuccess(boolean success) {
         this.success = success;
@@ -47,7 +47,7 @@ public class HomeTitleData {
         this.message = message;
     }
 
-    public void setItems(List<HomeFragmentTitleItem> items) {
+    public void setItems(List<HomeTitleItem> items) {
         this.items = items;
     }
 
@@ -63,11 +63,11 @@ public class HomeTitleData {
         return message;
     }
 
-    public List<HomeFragmentTitleItem> getItems() {
+    public List<HomeTitleItem> getItems() {
         return items;
     }
 
-    public static class HomeFragmentTitleItem {
+    public static class HomeTitleItem {
         private String id;
         private String name;
         private String sname;

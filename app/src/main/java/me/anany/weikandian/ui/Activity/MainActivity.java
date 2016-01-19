@@ -1,4 +1,4 @@
-package me.anany.weikandian.ui;
+package me.anany.weikandian.ui.activity;
 
 import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
@@ -11,7 +11,6 @@ import me.anany.weikandian.App;
 import me.anany.weikandian.AppManager;
 import me.anany.weikandian.R;
 import me.anany.weikandian.base.BaseActivity;
-import me.anany.weikandian.retrofit.ApiService;
 import me.anany.weikandian.ui.fragment.BillboardFragment;
 import me.anany.weikandian.ui.fragment.DiscoverFragment;
 import me.anany.weikandian.ui.fragment.HomeFragment;
@@ -23,8 +22,6 @@ import static android.widget.TabHost.OnTabChangeListener;
 public class MainActivity extends BaseActivity implements OnTabChangeListener {
 
     private long exitTime = 0;
-
-    private ApiService _api;
 
     //定义FragmentTabHost对象
     private FragmentTabHost mTabHost;
@@ -54,11 +51,6 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
     @Override
     protected int inflateLayoutId() {
         return R.layout.activity_main;
-    }
-
-    @Override
-    protected void prepare() {
-        _api = App.getApi();
     }
 
     @Override

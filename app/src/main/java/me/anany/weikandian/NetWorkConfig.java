@@ -5,7 +5,7 @@ package me.anany.weikandian;
  * <p>
  * Email:zhujun2730@gmail.com
  */
-public class NetWorkConfig {
+public class NetworkConfig {
 
     /**
      *  获取UID

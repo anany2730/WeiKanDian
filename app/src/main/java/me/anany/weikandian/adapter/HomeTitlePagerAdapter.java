@@ -22,7 +22,7 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
 
     private List<HomePager> pagerList;
     private List<String> titleTextList;
-    private List<HomeTitleData.HomeFragmentTitleItem> homeTitleDataItems;
+    private List<HomeTitleData.HomeTitleItem> homeTitleDataItems;
 
     private LinkedHashMap<Integer, View> views = new LinkedHashMap<>();
 
@@ -32,7 +32,7 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
      * @param titleTextList      Title 文字的集合
      */
     public HomeTitlePagerAdapter(List<HomePager> pagerList,
-                                 List<HomeTitleData.HomeFragmentTitleItem> homeTitleDataItems,
+                                 List<HomeTitleData.HomeTitleItem> homeTitleDataItems,
                                  List<String> titleTextList) {
         this.pagerList = pagerList;
         this.titleTextList = titleTextList;
@@ -66,13 +66,13 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
 
         if (view == null) {
 
-            view = homePager.getView();
+            view = homePager.inflateView();
 
             views.put(position, view);
         }
 
-        homePager.initData(catid);
-        homePager.setPagerHasInitData(true);
+//        homePager.initData(catid);
+//        homePager.setPagerHasInitData(true);
 
         container.addView(view);
         return view;

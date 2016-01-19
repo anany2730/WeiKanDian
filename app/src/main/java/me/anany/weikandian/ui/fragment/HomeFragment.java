@@ -19,13 +19,17 @@ import me.anany.weikandian.base.BaseFragment;
 import me.anany.weikandian.model.HomeTitleData;
 import me.anany.weikandian.retrofit.RxApiThread;
 import me.anany.weikandian.ui.pager.HomePager;
+import me.anany.weikandian.utils.LogUtil;
 
 /**
  * Created by anany on 16/1/6.  首页新闻 Fragment
- *
+ * <p>
  * Email:zhujun2730@gmail.com
  */
 public class HomeFragment extends BaseFragment {
+
+    private static final int FROM_NET_WORK = 0;
+    private static final int FROM_DB = 1;
 
     @Bind(R.id.tab_layout)
     TabLayout mTabLayout;
@@ -34,7 +38,6 @@ public class HomeFragment extends BaseFragment {
     ViewPager vp_home;
 
     private List<String> titleTextList;
-
 
     private boolean hasInitData = false;
 
@@ -48,22 +51,43 @@ public class HomeFragment extends BaseFragment {
 
         if (!hasInitData) {
 
-            App.getApi().getHomeNewsTitle("WIFI", "2.0.4", "c1005", "Nexus 4", "android", "6416405",
-                    "7f08bcd287cc5096", "22", "5.1.1", "1", "1452050427", "9279697", "204",
-                    "6b64883a89dbf5c36d669baa1bced5de")
-                    .compose(RxApiThread.convert())
-                    .compose(bindUntilEvent(FragmentEvent.PAUSE))
-                    .subscribe(this::handleResponseData);
+            // 先从数据库取出所有Title，没有的话重新从网络获取
+            DaoSession daoSession = App.getDaoSession(mActivity);
+            HomeTitleDBDao titleDao = daoSession.getHomeTitleDBDao();
+            List<HomeTitleDB> homeTitleDataItems = titleDao.loadAll();
+
+            if (homeTitleDataItems != null && homeTitleDataItems.size() > 0) {
+
+                LogUtil.e("从数据库取Title");
+                List<HomeTitleData.HomeTitleItem> homeTitleItems = new ArrayList<>();
+
+                for (HomeTitleDB homeTitleDB : homeTitleDataItems) {
+                    HomeTitleData.HomeTitleItem homeTitleItem = new HomeTitleData.HomeTitleItem();
+                    homeTitleItem.setName(homeTitleDB.getName());
+                    homeTitleItem.setId(homeTitleDB.getCat_id());
+                    homeTitleItems.add(homeTitleItem);
+                }
+
+                handleResponseData(homeTitleItems, FROM_DB);
+
+            } else {
+
+                App.getApi().getHomeNewsTitle("WIFI", "2.0.4", "c1005", "Nexus 4", "android", "6416405",
+                        "7f08bcd287cc5096", "22", "5.1.1", "1", "1452050427", "9279697", "204",
+                        "6b64883a89dbf5c36d669baa1bced5de")
+                        .compose(RxApiThread.convert())
+                        .compose(bindUntilEvent(FragmentEvent.PAUSE))
+                        .map(HomeTitleData::getItems)
+                        .subscribe(homeTitleItems -> handleResponseData(homeTitleItems, FROM_NET_WORK));
+            }
 
         }
     }
 
     /**
      * 处理从服务器获取的顶部Title数据
-     *
-     * @param homeTitleData 服务器返回的bean
      */
-    private void handleResponseData(HomeTitleData homeTitleData) {
+    private void handleResponseData(List<HomeTitleData.HomeTitleItem> homeTitleDataItems, int type) {
 
         hasInitData = true;
 
@@ -73,13 +97,11 @@ public class HomeFragment extends BaseFragment {
 
         // 内容页Pager的List
         List<HomePager> pagerList = new ArrayList<>();
-        pagerList.add(new HomePager(mActivity)); // 推荐页要单独处理
+        pagerList.add(new HomePager(this)); // 推荐页要单独处理
 
-        List<HomeTitleData.HomeFragmentTitleItem> homeTitleDataItems =
-                homeTitleData.getItems();
 
         for (int i = 0; i < homeTitleDataItems.size(); i++) {
-            pagerList.add(new HomePager(mActivity));
+            pagerList.add(new HomePager(this));
             titleTextList.add(homeTitleDataItems.get(i).getName());
         }
 
@@ -90,25 +112,62 @@ public class HomeFragment extends BaseFragment {
         vp_home.setAdapter(titlePagerAdapter);
         mTabLayout.setupWithViewPager(vp_home);
 
+        vp_home.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            int position;
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                this.position = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+                // 当滑动结束的时候，才去加载数据
+
+                if (state == 0) {
+                    String catid;
+
+                    if (position == 0) {
+                        catid = "0"; // 每页请求的catid
+                    } else {
+                        catid = homeTitleDataItems.get(position - 1).getId();
+                    }
+
+                    pagerList.get(position).initData(catid);
+                    pagerList.get(position).setPagerHasInitData(true);
+                }
+            }
+        });
+
+        pagerList.get(0).initData("0");// 初始化加载第一页
+
         //给Tabs设置适配器
         mTabLayout.setTabsFromPagerAdapter(titlePagerAdapter);
 
-        saveHomeTitleDataToDB();
+        if (type == FROM_NET_WORK) {
+            saveHomeTitleDataToDB(homeTitleDataItems);
+        }
     }
 
     /**
      * 保存Title数据到数据库
      */
-    private void saveHomeTitleDataToDB() {
+    private void saveHomeTitleDataToDB(List<HomeTitleData.HomeTitleItem> homeTitleDataItems) {
 
         DaoSession daoSession = App.getDaoSession(mActivity);
         HomeTitleDBDao homeTitleDao = daoSession.getHomeTitleDBDao();
 
-        for (String name : titleTextList) {
-
+        for (HomeTitleData.HomeTitleItem item : homeTitleDataItems) {
             HomeTitleDB homeTitle = new HomeTitleDB();
-            homeTitle.setName(name);
-
+            homeTitle.setName(item.getName());
+            homeTitle.setCat_id(item.getId());
             homeTitleDao.insert(homeTitle);
         }
     }

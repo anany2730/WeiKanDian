@@ -1,6 +1,6 @@
 package me.anany.weikandian.retrofit;
 
-import me.anany.weikandian.NetWorkConfig;
+import me.anany.weikandian.NetworkConfig;
 import me.anany.weikandian.model.HomeNewsData;
 import me.anany.weikandian.model.HomeTitleData;
 import retrofit.http.GET;
@@ -68,7 +68,7 @@ public interface ApiService {
     /**
      * 首页 【新闻Title数据】
      */
-    @GET(NetWorkConfig.HOME_TITLE)
+    @GET(NetworkConfig.HOME_TITLE)
     Observable<HomeTitleData> getHomeNewsTitle(
             @Query("access") String access,
             @Query("app_version") String app_version,
