@@ -66,7 +66,7 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
 
         if (view == null) {
 
-            view = homePager.inflateView();
+            view = homePager.inflateView(position);
 
             views.put(position, view);
         }

@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <TextView
+            android:id="@+id/tv_fav"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/ic_home_pager_item_fav"
+            android:gravity="center"
+            android:text="兴趣选择" />
+
+        <TextView
+            android:id="@+id/tv_today"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/ic_home_pager_item_today"
+            android:gravity="center"
+            android:text="今日看点" />
+
+        <TextView
+            android:id="@+id/tv_sign"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/ic_home_pager_item_sign"
+            android:gravity="center"
+            android:text="每日签到" />
+
+        <TextView
+            android:id="@+id/tv_invited_friends"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/ic_home_pager_item_peopel"
+            android:gravity="center"
+            android:text="邀请好友" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:background="@color/tv_line"
+        android:layout_height="0.5dp"/>
+</LinearLayout>

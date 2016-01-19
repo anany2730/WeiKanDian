@@ -23,6 +23,7 @@ import me.anany.weikandian.model.HomeNewsDataItem;
 import me.anany.weikandian.retrofit.RxApiThread;
 import me.anany.weikandian.ui.fragment.HomeFragment;
 import me.anany.weikandian.utils.LogUtil;
+import me.anany.weikandian.utils.ToastUtil;
 
 /**
  * Created by anany on 16/1/7.
@@ -66,7 +67,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
     /**
      * @return 每一页的视图View【将View集中缓存到LinkedHashMap ，避免多次inflate】
      */
-    public View inflateView() {
+    public View inflateView(int position) {
 
         LogUtil.e("HomePager  inflate  View ...");
         mRootView = View.inflate(mContext, R.layout.pager_home, null);
@@ -74,12 +75,12 @@ public class HomePager implements XRecyclerView.LoadingListener {
         tv_error = (TextView) mRootView.findViewById(R.id.tv_error);
         pb_pager_loading = (ProgressBar) mRootView.findViewById(R.id.pb_pager_loading);
 
-        initRefresh();
+        initRefresh(position);
 
         return mRootView;
     }
 
-    public void initRefresh() {
+    public void initRefresh(int position) {
 
         items = new ArrayList<>();
 
@@ -87,13 +88,28 @@ public class HomePager implements XRecyclerView.LoadingListener {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
 
+        if (position == 0) {
+
+            // 添加推荐页的header Item
+
+            View v = View.inflate(mContext, R.layout.header_home_pager, null);
+            v.findViewById(R.id.tv_invited_friends).
+                    setOnClickListener(new HeaderItemClickListener());
+            v.findViewById(R.id.tv_fav).
+                    setOnClickListener(new HeaderItemClickListener());
+            v.findViewById(R.id.tv_today).
+                    setOnClickListener(new HeaderItemClickListener());
+            v.findViewById(R.id.tv_sign).
+                    setOnClickListener(new HeaderItemClickListener());
+            mRecyclerView.addHeaderView(v);
+        }
+
         homeRecyclerViewAdapter = new HomeRecyclerViewAdapter(mContext, items);
 
         mRecyclerView.setAdapter(homeRecyclerViewAdapter);
 
         mRecyclerView.setLoadingListener(this);
     }
-
 
     public void setPagerHasInitData(boolean hasInitData) {
         this.hasInitData = hasInitData;
@@ -108,7 +124,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         this.catId = catId;
 
-        LogUtil.e("catId："+catId+"，getVisibility：");
+        LogUtil.e("catId：" + catId + "，getVisibility：");
 
         if (!hasInitData) {
 
@@ -129,12 +145,13 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         pb_pager_loading.setVisibility(View.GONE);
 
-        if (homeNewsData != null && homeNewsData.getItems() != null) {
+        if (homeNewsData.getItems() != null) {
 
             tv_error.setVisibility(View.GONE);
             mRecyclerView.setVisibility(View.VISIBLE);
 
             LogUtil.e(homeNewsData.toString());
+
 
             items.clear();
             items.addAll(homeNewsData.getItems());
@@ -155,7 +172,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         setPagerHasInitData(false); // 重置加载状态为可加载
 
-        step ++;
+        step++;
 
         initData(catId);
     }
@@ -245,6 +262,27 @@ public class HomePager implements XRecyclerView.LoadingListener {
             homeItemDB.setCatid(homeNewsDataItem.getCatid());
 
             homeNewsDataItemDao.insert(homeItemDB);
+        }
+    }
+
+    class HeaderItemClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.tv_fav://兴趣选择
+                    ToastUtil.showToast(mContext, "点击了兴趣选择");
+                    break;
+                case R.id.tv_today:
+                    ToastUtil.showToast(mContext, "点击了今日看点");
+                    break;
+                case R.id.tv_sign:
+                    ToastUtil.showToast(mContext, "点击了每日签到");
+                    break;
+                case R.id.tv_invited_friends:
+                    ToastUtil.showToast(mContext, "点击了邀请好友");
+                    break;
+            }
         }
     }
 }
