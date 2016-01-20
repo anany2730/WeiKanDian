@@ -60,7 +60,7 @@ public class App extends Application {
         return _api;
     }
 
-    public RefWatcher getWatcher(){
+    public RefWatcher getWatcher() {
         return _watcher;
     }
 
