@@ -143,13 +143,13 @@ public class HomeFragment extends BaseFragment {
                     }
 
                     // 执行了initData方法，HomePager才会去获取数据
-                    pagerList.get(position).initData(catid);
+                    pagerList.get(position).initData(catid,position);
                     pagerList.get(position).setPagerHasInitData(true);
                 }
             }
         });
 
-        pagerList.get(0).initData("0");// 初始化加载第一页"推荐"
+        pagerList.get(0).initData("0", 0);// 初始化加载第一页"推荐"
         pagerList.get(0).setPagerHasInitData(true);
 
         //给Tabs设置适配器

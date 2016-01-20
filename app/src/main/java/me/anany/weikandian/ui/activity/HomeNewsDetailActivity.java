@@ -37,9 +37,9 @@ public class HomeNewsDetailActivity extends BaseActivity {
     WebView wv_content;
 
 
-    @OnClick({R.id.btn_back,R.id.btn_more})
-    void onClick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.btn_back, R.id.btn_more})
+    void onClick(View view) {
+        switch (view.getId()) {
             case R.id.btn_back:
                 finish();
                 break;
@@ -80,7 +80,6 @@ public class HomeNewsDetailActivity extends BaseActivity {
                         // 网页加载完成
                         pb_title.setVisibility(View.INVISIBLE);
                     } else {
-                        // 加载中
 
                     }
                 }

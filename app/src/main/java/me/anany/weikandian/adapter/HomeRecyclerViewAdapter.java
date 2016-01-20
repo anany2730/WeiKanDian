@@ -28,7 +28,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
     private static ClickListener clickListener;
 
     public interface ClickListener {
-        void onItemClick(int position, View v,List<HomeNewsDataItem> items);
+        void onItemClick(Integer position, View v,List<HomeNewsDataItem> items);
         void onItemLongClick(int position, View v);
     }
 

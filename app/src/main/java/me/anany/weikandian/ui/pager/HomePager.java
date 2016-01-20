@@ -43,16 +43,19 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     public Context mContext;
     public List<HomeNewsDataItem> homeNewsDataItems;
-    private XRecyclerView mRecyclerView;
+
     private boolean hasInitData = false;
     private String catId;// 传入顶部Title的ID，用来分别获取每页Pager的数据
+
+    private XRecyclerView mRecyclerView;
     private HomeRecyclerViewAdapter homeRecyclerViewAdapter;
     private TextView tv_error;
-    private int step = 1;// 每次下拉刷新，递增传递此参数获取新的数据
+    private ProgressBar pb_pager_loading;
 
+    private int step = 1;// 每次下拉刷新，递增传递此参数获取新的数据
     private String requestTime;
 
-    private ProgressBar pb_pager_loading;
+    public static int position; // 每一页的位置
 
     public HomePager(HomeFragment homeFragment) {
         this.mContext = homeFragment.mActivity;
@@ -80,17 +83,18 @@ public class HomePager implements XRecyclerView.LoadingListener {
     /**
      * 初始化RecyclerView ，但并不立即加载数据
      *
-     * @param pagerPosition 当前页的postion
+     * @param position 当前页的postion
      */
-    public void initRefresh(int pagerPosition) {
+    public void initRefresh(int position) {
 
+        this.position = position;
         homeNewsDataItems = new ArrayList<>();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        if (pagerPosition == 0) {
+        if (position == 0) {
 
             // 添加推荐页的header Item
 
@@ -107,7 +111,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
 
         homeRecyclerViewAdapter.setOnItemClickListener(new
-                ItemClickListen(pagerPosition, homeNewsDataItems));
+                ItemClickListen(homeNewsDataItems));
 
     }
 
@@ -125,9 +129,11 @@ public class HomePager implements XRecyclerView.LoadingListener {
      * 加载每个Pager的内容数据
      *
      * @param catId 每页Pager的 catid
+     * @param position
      */
-    public void initData(String catId) {
+    public void initData(String catId, int position) {
 
+        this.position = position;
         this.catId = catId;
 
         if (!hasInitData) {
@@ -182,7 +188,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         step++;
 
-        initData(catId);
+        initData(catId, position);
     }
 
     @Override
@@ -276,19 +282,17 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     class ItemClickListen implements HomeRecyclerViewAdapter.ClickListener {
 
-        int pagerPosition;
         List<HomeNewsDataItem> homeNewsDataItems;
 
-        public ItemClickListen(int pagerPosition, List<HomeNewsDataItem> homeNewsDataItems) {
-            this.pagerPosition = pagerPosition;
+        public ItemClickListen(List<HomeNewsDataItem> homeNewsDataItems) {
             this.homeNewsDataItems = homeNewsDataItems;
         }
 
         @Override
-        public void onItemClick(int position, View v, List<HomeNewsDataItem> items) {
-            LogUtil.e("position:" + position + "，pagerPosition" + pagerPosition);
+        public void onItemClick(Integer position, View v, List<HomeNewsDataItem> items) {
+            LogUtil.e("position:" + position + "，pagerPosition" + HomePager.position);
 
-            if (pagerPosition == 1) {
+            if (HomePager.position == 0) {
 
                 if (position == 1) {
                     switch (v.getId()) {
