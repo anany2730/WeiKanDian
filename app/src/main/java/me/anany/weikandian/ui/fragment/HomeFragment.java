@@ -19,7 +19,6 @@ import me.anany.weikandian.base.BaseFragment;
 import me.anany.weikandian.model.HomeTitleData;
 import me.anany.weikandian.retrofit.RxApiThread;
 import me.anany.weikandian.ui.pager.HomePager;
-import me.anany.weikandian.utils.LogUtil;
 
 /**
  * Created by anany on 16/1/6.  首页新闻 Fragment
@@ -36,8 +35,6 @@ public class HomeFragment extends BaseFragment {
 
     @Bind(R.id.vp_home)
     ViewPager vp_home;
-
-    private List<String> titleTextList;
 
     private boolean hasInitData = false;
 
@@ -58,11 +55,11 @@ public class HomeFragment extends BaseFragment {
 
             if (homeTitleDataItems != null && homeTitleDataItems.size() > 0) {
 
-                LogUtil.e("从数据库取Title");
                 List<HomeTitleData.HomeTitleItem> homeTitleItems = new ArrayList<>();
 
                 for (HomeTitleDB homeTitleDB : homeTitleDataItems) {
-                    HomeTitleData.HomeTitleItem homeTitleItem = new HomeTitleData.HomeTitleItem();
+                    HomeTitleData.HomeTitleItem homeTitleItem =
+                            new HomeTitleData.HomeTitleItem();
                     homeTitleItem.setName(homeTitleDB.getName());
                     homeTitleItem.setId(homeTitleDB.getCat_id());
                     homeTitleItems.add(homeTitleItem);
@@ -72,13 +69,15 @@ public class HomeFragment extends BaseFragment {
 
             } else {
 
-                App.getApi().getHomeNewsTitle("WIFI", "2.0.4", "c1005", "Nexus 4", "android", "6416405",
-                        "7f08bcd287cc5096", "22", "5.1.1", "1", "1452050427", "9279697", "204",
+                App.getApi().getHomeNewsTitle("WIFI", "2.0.4", "c1005", "Nexus 4",
+                        "android", "6416405", "7f08bcd287cc5096", "22",
+                        "5.1.1", "1", "1452050427", "9279697", "204",
                         "6b64883a89dbf5c36d669baa1bced5de")
                         .compose(RxApiThread.convert())
                         .compose(bindUntilEvent(FragmentEvent.PAUSE))
                         .map(HomeTitleData::getItems)
-                        .subscribe(homeTitleItems -> handleResponseData(homeTitleItems, FROM_NET_WORK));
+                        .subscribe(homeTitleItems ->
+                                handleResponseData(homeTitleItems, FROM_NET_WORK));
             }
 
         }
@@ -92,12 +91,13 @@ public class HomeFragment extends BaseFragment {
         hasInitData = true;
 
         // Title文字的List
-        titleTextList = new ArrayList<>();
+        List<String> titleTextList = new ArrayList<>();
         titleTextList.add("推荐");// 推荐页要单独处理
 
         // 内容页Pager的List
         List<HomePager> pagerList = new ArrayList<>();
-        pagerList.add(new HomePager(this)); // 推荐页要单独处理
+
+        pagerList.add(new HomePager(this)); // 初始化推荐页
 
 
         for (int i = 0; i < homeTitleDataItems.size(); i++) {
@@ -114,7 +114,7 @@ public class HomeFragment extends BaseFragment {
 
         vp_home.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
-            int position;
+            private int position;
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -130,23 +130,26 @@ public class HomeFragment extends BaseFragment {
             public void onPageScrollStateChanged(int state) {
 
                 // 当滑动结束的时候，才去加载数据
-
+                // 实现【当快速切换ViewPager的时候不会加载数据】
                 if (state == 0) {
-                    String catid;
 
+                    String catid;// 每页请求的catid
+
+                    // 当position == 0 时，catid == 0;其他从集合中取
                     if (position == 0) {
-                        catid = "0"; // 每页请求的catid
+                        catid = "0";
                     } else {
                         catid = homeTitleDataItems.get(position - 1).getId();
                     }
 
+                    // 执行了initData方法，HomePager才会去获取数据
                     pagerList.get(position).initData(catid);
                     pagerList.get(position).setPagerHasInitData(true);
                 }
             }
         });
 
-        pagerList.get(0).initData("0");// 初始化加载第一页
+        pagerList.get(0).initData("0");// 初始化加载第一页"推荐"
 
         //给Tabs设置适配器
         mTabLayout.setTabsFromPagerAdapter(titlePagerAdapter);

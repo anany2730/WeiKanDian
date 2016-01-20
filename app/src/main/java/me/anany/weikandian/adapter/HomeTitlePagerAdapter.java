@@ -54,15 +54,7 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
 
         HomePager homePager = pagerList.get(position);
 
-        String catid;
-
         View view = views.get(position);// 从缓存中去取View
-
-        if (position == 0) {
-            catid = "0"; // 每页请求的catid
-        } else {
-            catid = homeTitleDataItems.get(position - 1).getId();
-        }
 
         if (view == null) {
 
@@ -70,9 +62,6 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
 
             views.put(position, view);
         }
-
-//        homePager.initData(catid);
-//        homePager.setPagerHasInitData(true);
 
         container.addView(view);
         return view;

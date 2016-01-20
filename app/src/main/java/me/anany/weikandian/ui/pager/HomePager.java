@@ -57,23 +57,23 @@ public class HomePager implements XRecyclerView.LoadingListener {
     private int step = 1;// 每次下拉刷新，递增传递此参数获取新的数据
 
     private String requestTime;
-    private View mRootView;
 
-    private HomeFragment homeFragment;
     private ProgressBar pb_pager_loading;
 
     public HomePager(HomeFragment homeFragment) {
         this.mContext = homeFragment.mActivity;
-        this.homeFragment = homeFragment;
     }
 
     /**
+     * 初始化View
+     *
+     * @param position 每页的位置
      * @return 每一页的视图View【将View集中缓存到LinkedHashMap ，避免多次inflate】
      */
     public View inflateView(int position) {
 
         LogUtil.e("HomePager  inflate  View ...");
-        mRootView = View.inflate(mContext, R.layout.pager_home, null);
+        View mRootView = View.inflate(mContext, R.layout.pager_home, null);
         mRecyclerView = (XRecyclerView) mRootView.findViewById(R.id.recycle_view);
         tv_error = (TextView) mRootView.findViewById(R.id.tv_error);
         pb_pager_loading = (ProgressBar) mRootView.findViewById(R.id.pb_pager_loading);
@@ -83,6 +83,11 @@ public class HomePager implements XRecyclerView.LoadingListener {
         return mRootView;
     }
 
+    /**
+     * 初始化RecyclerView ，但并不立即加载数据
+     *
+     * @param pagerPosition 当前页的postion
+     */
     public void initRefresh(int pagerPosition) {
 
         homeNewsDataItems = new ArrayList<>();
@@ -106,45 +111,48 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         mRecyclerView.setLoadingListener(this);
 
+        // 添加RecyclerView的item 点击事件
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(mContext,
-                new RecyclerItemClickListener.OnItemClickListener() {
+                (v, position) -> {
 
-                    @Override
-                    public void onItemClick(View v, int position) {
+                    if (pagerPosition == 0) {
 
-                        if (pagerPosition == 0) {
-
-                            if (position == 1) {
-                                switch (v.getId()) {
-                                    case R.id.tv_fav://兴趣选择
-                                        ToastUtil.showToast(mContext, "点击了兴趣选择");
-                                        break;
-                                    case R.id.tv_today:
-                                        ToastUtil.showToast(mContext, "点击了今日看点");
-                                        break;
-                                    case R.id.tv_sign:
-                                        ToastUtil.showToast(mContext, "点击了每日签到");
-                                        break;
-                                    case R.id.tv_invited_friends:
-                                        ToastUtil.showToast(mContext, "点击了邀请好友");
-                                        break;
-                                }
-                            } else if (position > 1) {
-                                // 跳转到新闻详情
-                                Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
-                                intent.putExtra("news_data", homeNewsDataItems.get(position - 2));
-                                mContext.startActivity(intent);
+                        if (position == 1) {
+                            switch (v.getId()) {
+                                case R.id.tv_fav://兴趣选择
+                                    ToastUtil.showToast(mContext, "点击了兴趣选择");
+                                    break;
+                                case R.id.tv_today:
+                                    ToastUtil.showToast(mContext, "点击了今日看点");
+                                    break;
+                                case R.id.tv_sign:
+                                    ToastUtil.showToast(mContext, "点击了每日签到");
+                                    break;
+                                case R.id.tv_invited_friends:
+                                    ToastUtil.showToast(mContext, "点击了邀请好友");
+                                    break;
                             }
-                        } else {
+                        } else if (position > 1) {
+                            // 跳转到新闻详情
                             Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
-                            intent.putExtra("news_data", homeNewsDataItems.get(position - 1));
+                            intent.putExtra("news_data", homeNewsDataItems.get(position - 2));
                             mContext.startActivity(intent);
                         }
+                    } else {
+                        Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
+                        intent.putExtra("news_data", homeNewsDataItems.get(position - 1));
+                        mContext.startActivity(intent);
                     }
                 })
         );
     }
 
+    /**
+     * 设置是否已经初始化数据
+     *
+     * @param hasInitData true 为已经初始化数据了
+     *                    false 重置初始状态为还未获取
+     */
     public void setPagerHasInitData(boolean hasInitData) {
         this.hasInitData = hasInitData;
     }
@@ -158,16 +166,16 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         this.catId = catId;
 
-        LogUtil.e("catId：" + catId + "，getVisibility：");
-
         if (!hasInitData) {
 
             requestTime =
                     System.currentTimeMillis() + "";
-            requestTime = requestTime.substring(0,10);
+            requestTime = requestTime.substring(0, 10);
 
-            App.getApi().getHomeNewsData("WIFI", "2.0.4", catId, "c1005", "Nexus 4", "android", "6416405", "1453254918",
-                    "7f08bcd287cc5096", "22", "5.1.1", "2", requestTime, step + "", "9279697", "355136051237892", "204",
+            App.getApi().getHomeNewsData("WIFI", "2.0.4",
+                    catId, "c1005", "Nexus 4", "android", "6416405", "1453254918",
+                    "7f08bcd287cc5096", "22", "5.1.1", "2", requestTime, step + "",
+                    "9279697", "355136051237892", "204",
                     "fcd163d6ed68ef79784848eb1b1fc842")
                     .compose(RxApiThread.convert())
                     .subscribe(this::handleResponseData);
@@ -250,7 +258,8 @@ public class HomePager implements XRecyclerView.LoadingListener {
         this.requestTime = System.currentTimeMillis() + "";
 
 
-        App.getApi().getHomeNewsDataMore("WIFI", "2.0.4", catid, "c1005", "Nexus 4", "android", "6416405", maxTime, "7f08bcd287cc5096",
+        App.getApi().getHomeNewsDataMore("WIFI", "2.0.4", catid, "c1005",
+                "Nexus 4", "android", "6416405", maxTime, "7f08bcd287cc5096",
                 "22", "5.1.1", "2", requestTime, "9279697", "355136051237892", "204",
                 "3d3f7cf7d82228f8fd555c9c20961d99")
                 .compose(RxApiThread.convert())

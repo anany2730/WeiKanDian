@@ -23,7 +23,8 @@ public class NetworkConfig {
 
     //access=WIFI&action=register&app_version=2.0.4&channel=c1005&
     // device_model=Nexus+4&device_platform=android&iid=6416405&
-    // mobile=18607000538&openudid=7f08bcd287cc5096&os_api=22&os_version=mk_mako-userdebug+5.1.1+LVY48F+a8f06c66ed+test-keys
+    // mobile=18607000538&openudid=7f08bcd287cc5096&os_api=22
+    // &os_version=mk_mako-userdebug+5.1.1+LVY48F+a8f06c66ed+test-keys
     // &phone_sim=2&request_time=1452061415&uid=9279697
     // &uuid=355136051237892&version_code=204&sign=a0e8eb0e0d96864792354f62deca5a24
     /**
