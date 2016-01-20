@@ -150,6 +150,7 @@ public class HomeFragment extends BaseFragment {
         });
 
         pagerList.get(0).initData("0");// 初始化加载第一页"推荐"
+        pagerList.get(0).setPagerHasInitData(true);
 
         //给Tabs设置适配器
         mTabLayout.setTabsFromPagerAdapter(titlePagerAdapter);

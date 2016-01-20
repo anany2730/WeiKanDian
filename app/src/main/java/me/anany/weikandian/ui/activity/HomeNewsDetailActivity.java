@@ -9,10 +9,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 import me.anany.weikandian.R;
 import me.anany.weikandian.base.BaseActivity;
 import me.anany.weikandian.model.HomeNewsDataItem;
-import me.anany.weikandian.utils.LogUtil;
 
 /**
  * Created by anany on 16/1/19.
@@ -37,6 +37,17 @@ public class HomeNewsDetailActivity extends BaseActivity {
     WebView wv_content;
 
 
+    @OnClick({R.id.btn_back,R.id.btn_more})
+    void onClick(View view){
+        switch (view.getId()){
+            case R.id.btn_back:
+                finish();
+                break;
+            case R.id.btn_more:
+                break;
+        }
+    }
+
     @Override
     protected int inflateLayoutId() {
         return R.layout.activity_home_news_detail;
@@ -53,16 +64,17 @@ public class HomeNewsDetailActivity extends BaseActivity {
 
     void initData() {
 
-        HomeNewsDataItem newsDataItem = (HomeNewsDataItem) getIntent().getSerializableExtra("news_data");
+        HomeNewsDataItem newsDataItem = (HomeNewsDataItem) getIntent().
+                getSerializableExtra("news_data");
 
         if (newsDataItem != null) {
+
             tv_title_text.setText(newsDataItem.getTitle());
             wv_content.loadUrl(newsDataItem.getUrl());
             wv_content.setWebChromeClient(new WebChromeClient() {
+
                 @Override
                 public void onProgressChanged(WebView view, int newProgress) {
-
-                    LogUtil.e("newProgress：" + newProgress);
 
                     if (newProgress == 100) {
                         // 网页加载完成

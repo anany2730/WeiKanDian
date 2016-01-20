@@ -25,6 +25,17 @@ import me.anany.weikandian.model.HomeNewsDataItem;
  */
 public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
+    private static ClickListener clickListener;
+
+    public interface ClickListener {
+        void onItemClick(int position, View v,List<HomeNewsDataItem> items);
+        void onItemLongClick(int position, View v);
+    }
+
+    public void setOnItemClickListener(ClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
+
 
     private List<HomeNewsDataItem> items;
     private Context context;
@@ -138,7 +149,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
      *  右边一张小图片的布局
      *
      */
-    public class ViewHolder1 extends RecyclerView.ViewHolder {
+    public class ViewHolder1 extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView tv_title,tv_account_name,tv_read_num,tv_time;
         public ImageView iv_main_img,iv_delete;
@@ -146,6 +157,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         public ViewHolder1(View view) {
 
             super(view);
+            view.setOnClickListener(this);
 
             this.tv_title = (TextView) view.findViewById(R.id.tv_title);
             this.tv_account_name = (TextView) view.findViewById(R.id.tv_account_name);
@@ -156,13 +168,18 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
         }
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onItemClick(getAdapterPosition(), v,items);
+        }
     }
 
     /**
      *  多张小图片的布局
      *
      */
-    public class ViewHolder2 extends RecyclerView.ViewHolder {
+    public class ViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView tv_title,tv_account_name,tv_read_num;
         public ImageView iv_main_img1,iv_delete,iv_main_img2,iv_main_img3;
@@ -170,6 +187,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         public ViewHolder2(View view) {
 
             super(view);
+            view.setOnClickListener(this);
 
             this.tv_title = (TextView) view.findViewById(R.id.tv_title);
             this.tv_account_name = (TextView) view.findViewById(R.id.tv_account_name);
@@ -179,13 +197,18 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
             this.iv_main_img3 = (ImageView) view.findViewById(R.id.iv_main_img3);
             this.iv_delete = (ImageView) view.findViewById(R.id.iv_delete);
         }
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onItemClick(getAdapterPosition(), v,items);
+        }
     }
 
     /**
      *  首页 专题 大图的布局
      *
      */
-    public class ViewHolder3 extends RecyclerView.ViewHolder {
+    public class ViewHolder3 extends RecyclerView.ViewHolder  implements View.OnClickListener{
 
         public TextView tv_op_mark,tv_title,tv_account_name,tv_read_num;
         public ImageView iv_main_img,iv_delete,iv_op_mark;
@@ -193,6 +216,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
         public ViewHolder3(View view) {
 
             super(view);
+            view.setOnClickListener(this);
 
             this.tv_title = (TextView) view.findViewById(R.id.tv_title);
             this.tv_account_name = (TextView) view.findViewById(R.id.tv_account_name);
@@ -201,6 +225,11 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
             this.iv_main_img = (ImageView) view.findViewById(R.id.iv_main_img);
             this.iv_delete = (ImageView) view.findViewById(R.id.iv_delete);
             this.iv_op_mark = (ImageView) view.findViewById(R.id.iv_op_mark);
+        }
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onItemClick(getAdapterPosition(), v,items);
         }
     }
 }

@@ -19,7 +19,6 @@ import me.anany.dao.HomeItemDBDao;
 import me.anany.weikandian.App;
 import me.anany.weikandian.R;
 import me.anany.weikandian.adapter.HomeRecyclerViewAdapter;
-import me.anany.weikandian.listener.RecyclerItemClickListener;
 import me.anany.weikandian.model.HomeNewsData;
 import me.anany.weikandian.model.HomeNewsDataItem;
 import me.anany.weikandian.retrofit.RxApiThread;
@@ -43,17 +42,12 @@ public class HomePager implements XRecyclerView.LoadingListener {
     private static final int PULL_TO_REFRESH = 0;
 
     public Context mContext;
-
+    public List<HomeNewsDataItem> homeNewsDataItems;
     private XRecyclerView mRecyclerView;
-
     private boolean hasInitData = false;
-
     private String catId;// 传入顶部Title的ID，用来分别获取每页Pager的数据
-
     private HomeRecyclerViewAdapter homeRecyclerViewAdapter;
     private TextView tv_error;
-    private List<HomeNewsDataItem> homeNewsDataItems;
-
     private int step = 1;// 每次下拉刷新，递增传递此参数获取新的数据
 
     private String requestTime;
@@ -111,40 +105,10 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         mRecyclerView.setLoadingListener(this);
 
-        // 添加RecyclerView的item 点击事件
-        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(mContext,
-                (v, position) -> {
 
-                    if (pagerPosition == 0) {
+        homeRecyclerViewAdapter.setOnItemClickListener(new
+                ItemClickListen(pagerPosition, homeNewsDataItems));
 
-                        if (position == 1) {
-                            switch (v.getId()) {
-                                case R.id.tv_fav://兴趣选择
-                                    ToastUtil.showToast(mContext, "点击了兴趣选择");
-                                    break;
-                                case R.id.tv_today:
-                                    ToastUtil.showToast(mContext, "点击了今日看点");
-                                    break;
-                                case R.id.tv_sign:
-                                    ToastUtil.showToast(mContext, "点击了每日签到");
-                                    break;
-                                case R.id.tv_invited_friends:
-                                    ToastUtil.showToast(mContext, "点击了邀请好友");
-                                    break;
-                            }
-                        } else if (position > 1) {
-                            // 跳转到新闻详情
-                            Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
-                            intent.putExtra("news_data", homeNewsDataItems.get(position - 2));
-                            mContext.startActivity(intent);
-                        }
-                    } else {
-                        Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
-                        intent.putExtra("news_data", homeNewsDataItems.get(position - 1));
-                        mContext.startActivity(intent);
-                    }
-                })
-        );
     }
 
     /**
@@ -173,7 +137,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
             requestTime = requestTime.substring(0, 10);
 
             App.getApi().getHomeNewsData("WIFI", "2.0.4",
-                    catId, "c1005", "Nexus 4", "android", "6416405", "1453254918",
+                    catId, "c1005", "Nexus 4", "android", "6416405", "1453274918",
                     "7f08bcd287cc5096", "22", "5.1.1", "2", requestTime, step + "",
                     "9279697", "355136051237892", "204",
                     "fcd163d6ed68ef79784848eb1b1fc842")
@@ -195,15 +159,16 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
             LogUtil.e(homeNewsData.toString());
 
-
-            homeNewsDataItems.clear();
-            homeNewsDataItems.addAll(homeNewsData.getItems());
+            this.homeNewsDataItems.clear();
+            this.homeNewsDataItems.addAll(homeNewsData.getItems());
             homeRecyclerViewAdapter.notifyDataSetChanged();
 
             saveDataToDB(PULL_TO_REFRESH, homeNewsData.getItems());
 
         } else {
-            tv_error.setVisibility(View.VISIBLE);
+            if(homeNewsDataItems.size() < 1) {
+                tv_error.setVisibility(View.VISIBLE);
+            }
         }
 
         mRecyclerView.refreshComplete();
@@ -306,6 +271,56 @@ public class HomePager implements XRecyclerView.LoadingListener {
             homeItemDB.setCatid(homeNewsDataItem.getCatid());
 
             homeNewsDataItemDao.insert(homeItemDB);
+        }
+    }
+
+    class ItemClickListen implements HomeRecyclerViewAdapter.ClickListener {
+
+        int pagerPosition;
+        List<HomeNewsDataItem> homeNewsDataItems;
+
+        public ItemClickListen(int pagerPosition, List<HomeNewsDataItem> homeNewsDataItems) {
+            this.pagerPosition = pagerPosition;
+            this.homeNewsDataItems = homeNewsDataItems;
+        }
+
+        @Override
+        public void onItemClick(int position, View v, List<HomeNewsDataItem> items) {
+            LogUtil.e("position:" + position + "，pagerPosition" + pagerPosition);
+
+            if (pagerPosition == 1) {
+
+                if (position == 1) {
+                    switch (v.getId()) {
+                        case R.id.tv_fav://兴趣选择
+                            ToastUtil.showToast(mContext, "点击了兴趣选择");
+                            break;
+                        case R.id.tv_today:
+                            ToastUtil.showToast(mContext, "点击了今日看点");
+                            break;
+                        case R.id.tv_sign:
+                            ToastUtil.showToast(mContext, "点击了每日签到");
+                            break;
+                        case R.id.tv_invited_friends:
+                            ToastUtil.showToast(mContext, "点击了邀请好友");
+                            break;
+                    }
+                } else if (position > 1) {
+                    // 跳转到新闻详情
+                    Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
+                    intent.putExtra("news_data", items.get(position - 2));
+                    mContext.startActivity(intent);
+                }
+            } else {
+                Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
+                intent.putExtra("news_data", items.get(position - 1));
+                mContext.startActivity(intent);
+            }
+        }
+
+        @Override
+        public void onItemLongClick(int position, View v) {
+
         }
     }
 
