@@ -40,22 +40,17 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     private static final int LOAD_MORE = 1;
     private static final int PULL_TO_REFRESH = 0;
-
+    public static int position; // 每一页的位置
     public Context mContext;
     public List<HomeNewsDataItem> homeNewsDataItems;
-
     private boolean hasInitData = false;
     private String catId;// 传入顶部Title的ID，用来分别获取每页Pager的数据
-
     private XRecyclerView mRecyclerView;
     private HomeRecyclerViewAdapter homeRecyclerViewAdapter;
     private TextView tv_error;
     private ProgressBar pb_pager_loading;
-
     private int step = 1;// 每次下拉刷新，递增传递此参数获取新的数据
     private String requestTime;
-
-    public static int position; // 每一页的位置
 
     public HomePager(HomeFragment homeFragment) {
         this.mContext = homeFragment.mActivity;
@@ -99,7 +94,14 @@ public class HomePager implements XRecyclerView.LoadingListener {
             // 添加推荐页的header Item
 
             View v = View.inflate(mContext, R.layout.header_home_pager, null);
-
+            v.findViewById(R.id.tv_invited_friends).
+                    setOnClickListener(new HeaderItemClickListener());
+            v.findViewById(R.id.tv_fav).
+                    setOnClickListener(new HeaderItemClickListener());
+            v.findViewById(R.id.tv_today).
+                    setOnClickListener(new HeaderItemClickListener());
+            v.findViewById(R.id.tv_sign).
+                    setOnClickListener(new HeaderItemClickListener());
             mRecyclerView.addHeaderView(v);
         }
 
@@ -128,7 +130,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
     /**
      * 加载每个Pager的内容数据
      *
-     * @param catId 每页Pager的 catid
+     * @param catId    每页Pager的 catid
      * @param position
      */
     public void initData(String catId, int position) {
@@ -172,7 +174,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
             saveDataToDB(PULL_TO_REFRESH, homeNewsData.getItems());
 
         } else {
-            if(homeNewsDataItems.size() < 1) {
+            if (homeNewsDataItems.size() < 1) {
                 tv_error.setVisibility(View.VISIBLE);
             }
         }
@@ -292,29 +294,13 @@ public class HomePager implements XRecyclerView.LoadingListener {
         public void onItemClick(Integer position, View v, List<HomeNewsDataItem> items) {
             LogUtil.e("position:" + position + "，pagerPosition" + HomePager.position);
 
-            if (HomePager.position == 0) {
+            if (HomePager.position == 0 && position > 1) {
 
-                if (position == 1) {
-                    switch (v.getId()) {
-                        case R.id.tv_fav://兴趣选择
-                            ToastUtil.showToast(mContext, "点击了兴趣选择");
-                            break;
-                        case R.id.tv_today:
-                            ToastUtil.showToast(mContext, "点击了今日看点");
-                            break;
-                        case R.id.tv_sign:
-                            ToastUtil.showToast(mContext, "点击了每日签到");
-                            break;
-                        case R.id.tv_invited_friends:
-                            ToastUtil.showToast(mContext, "点击了邀请好友");
-                            break;
-                    }
-                } else if (position > 1) {
-                    // 跳转到新闻详情
-                    Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
-                    intent.putExtra("news_data", items.get(position - 2));
-                    mContext.startActivity(intent);
-                }
+                // 跳转到新闻详情
+                Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
+                intent.putExtra("news_data", items.get(position - 2));
+                mContext.startActivity(intent);
+
             } else {
                 Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
                 intent.putExtra("news_data", items.get(position - 1));
@@ -328,5 +314,26 @@ public class HomePager implements XRecyclerView.LoadingListener {
         }
     }
 
+
+    class HeaderItemClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.tv_fav://兴趣选择
+                    ToastUtil.showToast(mContext, "点击了兴趣选择");
+                    break;
+                case R.id.tv_today:
+                    ToastUtil.showToast(mContext, "点击了今日看点");
+                    break;
+                case R.id.tv_sign:
+                    ToastUtil.showToast(mContext, "点击了每日签到");
+                    break;
+                case R.id.tv_invited_friends:
+                    ToastUtil.showToast(mContext, "点击了邀请好友");
+                    break;
+            }
+        }
+    }
 
 }
