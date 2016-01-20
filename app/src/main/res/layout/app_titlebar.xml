@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="48dp"
+    android:background="@color/tablayout_bg"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true">
+
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:background="@mipmap/ic_arrow_back_white"
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/btn_back"
+        android:ellipsize="end"
+        android:maxEms="13"
+        android:textSize="16sp"
+        android:singleLine="true"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btn_more"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@mipmap/ic_more_vert_white"
+        android:visibility="visible" />
+
+    <ProgressBar
+        android:id="@+id/pb_title"
+        style="?android:attr/progressBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/btn_more"
+        android:layout_toStartOf="@+id/btn_more" />
+
+</RelativeLayout>

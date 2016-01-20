@@ -10,4 +10,5 @@
     <color name="tablayout_bg">#202020</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="white_gray">#e1e1e1</color>
 </resources>
