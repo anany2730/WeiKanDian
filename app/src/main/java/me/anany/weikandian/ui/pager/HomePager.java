@@ -1,9 +1,8 @@
 package me.anany.weikandian.ui.pager;
 
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -16,13 +15,14 @@ import java.util.List;
 import me.anany.bean.HomeItemDB;
 import me.anany.dao.DaoSession;
 import me.anany.dao.HomeItemDBDao;
+import me.anany.dao.HomeItemDBUtil;
 import me.anany.weikandian.App;
 import me.anany.weikandian.R;
 import me.anany.weikandian.adapter.HomeRecyclerViewAdapter;
+import me.anany.weikandian.listener.RecyclerItemClickListener;
 import me.anany.weikandian.model.HomeNewsData;
 import me.anany.weikandian.model.HomeNewsDataItem;
 import me.anany.weikandian.retrofit.RxApiThread;
-import me.anany.weikandian.ui.activity.HomeNewsDetailActivity;
 import me.anany.weikandian.ui.fragment.HomeFragment;
 import me.anany.weikandian.utils.LogUtil;
 import me.anany.weikandian.utils.ToastUtil;
@@ -38,19 +38,24 @@ import me.anany.weikandian.utils.ToastUtil;
  */
 public class HomePager implements XRecyclerView.LoadingListener {
 
-    private static final int LOAD_MORE = 1;
     private static final int PULL_TO_REFRESH = 0;
-    public static int position; // 每一页的位置
+    private static final int LOAD_MORE = 1;
+
+    public int position; // 每一页的位置
+
     public Context mContext;
     public List<HomeNewsDataItem> homeNewsDataItems;
     private boolean hasInitData = false;
     private String catId;// 传入顶部Title的ID，用来分别获取每页Pager的数据
+
     private XRecyclerView mRecyclerView;
     private HomeRecyclerViewAdapter homeRecyclerViewAdapter;
     private TextView tv_error;
     private ProgressBar pb_pager_loading;
+
     private int step = 1;// 每次下拉刷新，递增传递此参数获取新的数据
     private String requestTime;
+    private RecyclerItemClickListener recyclerItemClickListener;
 
     public HomePager(HomeFragment homeFragment) {
         this.mContext = homeFragment.mActivity;
@@ -112,8 +117,9 @@ public class HomePager implements XRecyclerView.LoadingListener {
         mRecyclerView.setLoadingListener(this);
 
 
-        homeRecyclerViewAdapter.setOnItemClickListener(new
-                ItemClickListen(homeNewsDataItems));
+        recyclerItemClickListener = new RecyclerItemClickListener(mContext, position, homeNewsDataItems);
+
+        homeRecyclerViewAdapter.setOnItemClickListener(recyclerItemClickListener);
 
     }
 
@@ -127,16 +133,23 @@ public class HomePager implements XRecyclerView.LoadingListener {
         this.hasInitData = hasInitData;
     }
 
+
+    public void setRecyclerItemClickListener(int position) {
+        recyclerItemClickListener.setPagerPosition(position);
+    }
+
     /**
      * 加载每个Pager的内容数据
      *
-     * @param catId    每页Pager的 catid
-     * @param position
+     * @param catId    每页Pager的请求 catid
+     * @param position 每页Pager在viewpager中的position
      */
     public void initData(String catId, int position) {
 
         this.position = position;
         this.catId = catId;
+
+        LogUtil.e("catID：" + catId);
 
         if (!hasInitData) {
 
@@ -144,42 +157,69 @@ public class HomePager implements XRecyclerView.LoadingListener {
                     System.currentTimeMillis() + "";
             requestTime = requestTime.substring(0, 10);
 
+
             App.getApi().getHomeNewsData("WIFI", "2.0.4",
                     catId, "c1005", "Nexus 4", "android", "6416405", "1453274918",
                     "7f08bcd287cc5096", "22", "5.1.1", "2", requestTime, step + "",
                     "9279697", "355136051237892", "204",
                     "fcd163d6ed68ef79784848eb1b1fc842")
                     .compose(RxApiThread.convert())
-                    .subscribe(this::handleResponseData);
+                    .subscribe(homeNewsData -> {
+                        handleResponseData(homeNewsData, PULL_TO_REFRESH);
+                    }, e -> {
+
+                        ToastUtil.showToast(mContext, "网络君暂时出了一些问题");
+                        pb_pager_loading.setVisibility(View.GONE);
+                        mRecyclerView.refreshComplete();
+
+                    });
         }
     }
 
-    private void handleResponseData(HomeNewsData homeNewsData) {
+    private void handleResponseData(HomeNewsData homeNewsData, int type) {
 
         LogUtil.e(homeNewsData.toString());
 
-        pb_pager_loading.setVisibility(View.GONE);
+        if (type == PULL_TO_REFRESH) {
 
-        if (homeNewsData.getItems() != null) {
+            pb_pager_loading.setVisibility(View.GONE);
+            setPagerHasInitData(true);
 
-            tv_error.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
+            if (homeNewsData.getItems() != null) {
 
-            LogUtil.e(homeNewsData.toString());
+                tv_error.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
 
-            this.homeNewsDataItems.clear();
-            this.homeNewsDataItems.addAll(homeNewsData.getItems());
-            homeRecyclerViewAdapter.notifyDataSetChanged();
+                LogUtil.e(homeNewsData.toString());
 
-            saveDataToDB(PULL_TO_REFRESH, homeNewsData.getItems());
+                this.homeNewsDataItems.clear();
+                this.homeNewsDataItems.addAll(homeNewsData.getItems());
+                homeRecyclerViewAdapter.notifyDataSetChanged();
 
-        } else {
-            if (homeNewsDataItems.size() < 1) {
+                saveDataToDB(PULL_TO_REFRESH, homeNewsData.getItems());
+
+            } else if (homeNewsDataItems.size() < 1) {
                 tv_error.setVisibility(View.VISIBLE);
             }
-        }
 
-        mRecyclerView.refreshComplete();
+            mRecyclerView.refreshComplete();
+
+        } else { // 加载更多
+
+            if (homeNewsData.getItems() != null) {
+
+                tv_error.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+                LogUtil.e(homeNewsData.toString());
+                homeNewsDataItems.addAll(homeNewsData.getItems());
+                homeRecyclerViewAdapter.notifyDataSetChanged();
+
+                saveDataToDB(LOAD_MORE, homeNewsData.getItems());
+
+            }
+
+            mRecyclerView.loadMoreComplete();
+        }
     }
 
     @Override
@@ -198,26 +238,13 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         LogUtil.e("上拉刷新");
 
-        DaoSession daoSession = App.getDaoSession(mContext);
+        String inputTime = HomeItemDBUtil.getInput_time(mContext, position);
 
-        String sql = "select * from  HomeItemDB where position = " + catId;
-
-        Cursor cursor = daoSession.getDatabase().rawQuery(sql, null);
-
-        if (cursor != null && cursor.getCount() > 0) {
-            cursor.moveToNext();
-
-            String columnName = cursor.getString(4);
-
-            LogUtil.e("数据库：" + columnName);
-
-            getDataMore(catId, columnName);
-
-            cursor.close();
+        if (!TextUtils.isEmpty(inputTime)) {
+            getDataMore(catId, inputTime);
         } else {
             mRecyclerView.loadMoreComplete();
         }
-
     }
 
     /**
@@ -229,33 +256,24 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         this.catId = catid;
         this.requestTime = System.currentTimeMillis() + "";
-
+        this.requestTime = requestTime.substring(0, 10);
 
         App.getApi().getHomeNewsDataMore("WIFI", "2.0.4", catid, "c1005",
                 "Nexus 4", "android", "6416405", maxTime, "7f08bcd287cc5096",
                 "22", "5.1.1", "2", requestTime, "9279697", "355136051237892", "204",
                 "3d3f7cf7d82228f8fd555c9c20961d99")
                 .compose(RxApiThread.convert())
-                .subscribe(this::handleResponseDataMore);
+                .subscribe(homeNewsData -> {
+                    handleResponseData(homeNewsData, LOAD_MORE);
+                }, e -> {
+
+                    ToastUtil.showToast(mContext, "网络君暂时出了一些问题");
+                    pb_pager_loading.setVisibility(View.GONE);
+                    mRecyclerView.refreshComplete();
+                });
 
     }
 
-    private void handleResponseDataMore(HomeNewsData homeNewsData) {
-
-        if (homeNewsData != null && homeNewsData.getItems() != null) {
-
-            tv_error.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.VISIBLE);
-            LogUtil.e(homeNewsData.toString());
-            homeNewsDataItems.addAll(homeNewsData.getItems());
-            homeRecyclerViewAdapter.notifyDataSetChanged();
-
-            saveDataToDB(LOAD_MORE, homeNewsData.getItems());
-
-        }
-
-        mRecyclerView.loadMoreComplete();
-    }
 
     private void saveDataToDB(int type, List<HomeNewsDataItem> homeNewsDataItems) {
 
@@ -265,7 +283,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
         // 如果是下拉刷新的时候先把之前的数据删除了
         if (type == PULL_TO_REFRESH) {
 
-            String sql = "delete from  HomeItemDB where position = " + catId;
+            String sql = "delete from  HomeItemDB where position = " + position;
 
             daoSession.getDatabase().execSQL(sql);
 
@@ -274,46 +292,16 @@ public class HomePager implements XRecyclerView.LoadingListener {
         for (HomeNewsDataItem homeNewsDataItem : homeNewsDataItems) {
 
             HomeItemDB homeItemDB = new HomeItemDB();
-            homeItemDB.setPosition(catId);
+            homeItemDB.setPosition(position + "");
             homeItemDB.setCt(requestTime);
+
+            // input_time是作为加载更多的max_time参数请求服务器
+            homeItemDB.setInput_time(homeNewsDataItem.getInput_time());
             homeItemDB.setCatid(homeNewsDataItem.getCatid());
 
             homeNewsDataItemDao.insert(homeItemDB);
         }
     }
-
-    class ItemClickListen implements HomeRecyclerViewAdapter.ClickListener {
-
-        List<HomeNewsDataItem> homeNewsDataItems;
-
-        public ItemClickListen(List<HomeNewsDataItem> homeNewsDataItems) {
-            this.homeNewsDataItems = homeNewsDataItems;
-        }
-
-        @Override
-        public void onItemClick(Integer position, View v, List<HomeNewsDataItem> items) {
-            LogUtil.e("position:" + position + "，pagerPosition" + HomePager.position);
-
-            if (HomePager.position == 0 && position > 1) {
-
-                // 跳转到新闻详情
-                Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
-                intent.putExtra("news_data", items.get(position - 2));
-                mContext.startActivity(intent);
-
-            } else {
-                Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
-                intent.putExtra("news_data", items.get(position - 1));
-                mContext.startActivity(intent);
-            }
-        }
-
-        @Override
-        public void onItemLongClick(int position, View v) {
-
-        }
-    }
-
 
     class HeaderItemClickListener implements View.OnClickListener {
 

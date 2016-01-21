@@ -11,6 +11,7 @@ public class HomeItemDB {
     private String position;
     private String step;
     private String ct;
+    private String input_time;
     private String catid;
     private String thumb;
     private String idx;
@@ -40,12 +41,13 @@ public class HomeItemDB {
         this.id = id;
     }
 
-    public HomeItemDB(Long id, String is_read, String position, String step, String ct, String catid, String thumb, String idx, String account_id, String isext, String title, String read_num, String like_num, String share_num, String wurl, String video, String image_type, String op_mark, String op_mark_iurl, String op_mark_icolor, String account_name, String url, String is_cache, String article_type, String behot_time, String extraImg) {
+    public HomeItemDB(Long id, String is_read, String position, String step, String ct, String input_time, String catid, String thumb, String idx, String account_id, String isext, String title, String read_num, String like_num, String share_num, String wurl, String video, String image_type, String op_mark, String op_mark_iurl, String op_mark_icolor, String account_name, String url, String is_cache, String article_type, String behot_time, String extraImg) {
         this.id = id;
         this.is_read = is_read;
         this.position = position;
         this.step = step;
         this.ct = ct;
+        this.input_time = input_time;
         this.catid = catid;
         this.thumb = thumb;
         this.idx = idx;
@@ -107,6 +109,14 @@ public class HomeItemDB {
 
     public void setCt(String ct) {
         this.ct = ct;
+    }
+
+    public String getInput_time() {
+        return input_time;
+    }
+
+    public void setInput_time(String input_time) {
+        this.input_time = input_time;
     }
 
     public String getCatid() {
