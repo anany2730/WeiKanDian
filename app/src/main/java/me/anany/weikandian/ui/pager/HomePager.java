@@ -15,7 +15,7 @@ import java.util.List;
 import me.anany.bean.HomeItemDB;
 import me.anany.dao.DaoSession;
 import me.anany.dao.HomeItemDBDao;
-import me.anany.dao.HomeItemDBUtil;
+import me.anany.dao.DaoUtil;
 import me.anany.weikandian.App;
 import me.anany.weikandian.R;
 import me.anany.weikandian.adapter.HomeRecyclerViewAdapter;
@@ -38,8 +38,8 @@ import me.anany.weikandian.utils.ToastUtil;
  */
 public class HomePager implements XRecyclerView.LoadingListener {
 
-    private static final int PULL_TO_REFRESH = 0;
-    private static final int LOAD_MORE = 1;
+    private final int PULL_TO_REFRESH = 0;
+    private final int LOAD_MORE = 1;
 
     public int position; // 每一页的位置
 
@@ -50,8 +50,8 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     private XRecyclerView mRecyclerView;
     private HomeRecyclerViewAdapter homeRecyclerViewAdapter;
-    private TextView tv_error;
-    private ProgressBar pb_pager_loading;
+    private TextView mTextViewError;
+    private ProgressBar mProgressBar;
 
     private int step = 1;// 每次下拉刷新，递增传递此参数获取新的数据
     private String requestTime;
@@ -59,23 +59,26 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     public HomePager(HomeFragment homeFragment) {
         this.mContext = homeFragment.mActivity;
+
     }
 
     /**
      * 初始化View
      *
-     * @param position 每页的位置
+     * @param pagerPosition 每页的位置
      * @return 每一页的视图View【将View集中缓存到LinkedHashMap ，避免多次inflate】
      */
-    public View inflateView(int position) {
+    public View inflateView(String pagerPosition) {
 
         LogUtil.e("HomePager  inflate  View ...");
-        View mRootView = View.inflate(mContext, R.layout.pager_home, null);
-        mRecyclerView = (XRecyclerView) mRootView.findViewById(R.id.recycle_view);
-        tv_error = (TextView) mRootView.findViewById(R.id.tv_error);
-        pb_pager_loading = (ProgressBar) mRootView.findViewById(R.id.pb_pager_loading);
 
-        initRefresh(position);
+        View mRootView = View.inflate(mContext, R.layout.pager_home, null);
+
+        mRecyclerView = (XRecyclerView) mRootView.findViewById(R.id.recycle_view);
+        mTextViewError = (TextView) mRootView.findViewById(R.id.tv_error);
+        mProgressBar = (ProgressBar) mRootView.findViewById(R.id.pb_pager_loading);
+
+        initRefresh(pagerPosition);
 
         return mRootView;
     }
@@ -83,21 +86,19 @@ public class HomePager implements XRecyclerView.LoadingListener {
     /**
      * 初始化RecyclerView ，但并不立即加载数据
      *
-     * @param position 当前页的postion
+     * @param pagerPosition 当前页的postion
      */
-    public void initRefresh(int position) {
+    public void initRefresh(String pagerPosition) {
 
-        this.position = position;
         homeNewsDataItems = new ArrayList<>();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        if (position == 0) {
+        if ("0".equals(pagerPosition)) {
 
             // 添加推荐页的header Item
-
             View v = View.inflate(mContext, R.layout.header_home_pager, null);
             v.findViewById(R.id.tv_invited_friends).
                     setOnClickListener(new HeaderItemClickListener());
@@ -116,8 +117,8 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         mRecyclerView.setLoadingListener(this);
 
-
-        recyclerItemClickListener = new RecyclerItemClickListener(mContext, position, homeNewsDataItems);
+        // 由于该死的ViewPager缓存机制，第一次初始化的时候会加载两页pager
+        recyclerItemClickListener = new RecyclerItemClickListener(mContext, position + "");
 
         homeRecyclerViewAdapter.setOnItemClickListener(recyclerItemClickListener);
 
@@ -134,7 +135,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
     }
 
 
-    public void setRecyclerItemClickListener(int position) {
+    public void setRecyclerItemClickPosition(String position) {
         recyclerItemClickListener.setPagerPosition(position);
     }
 
@@ -169,7 +170,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
                     }, e -> {
 
                         ToastUtil.showToast(mContext, "网络君暂时出了一些问题");
-                        pb_pager_loading.setVisibility(View.GONE);
+                        mProgressBar.setVisibility(View.GONE);
                         mRecyclerView.refreshComplete();
 
                     });
@@ -178,16 +179,14 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     private void handleResponseData(HomeNewsData homeNewsData, int type) {
 
-        LogUtil.e(homeNewsData.toString());
-
         if (type == PULL_TO_REFRESH) {
 
-            pb_pager_loading.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
             setPagerHasInitData(true);
 
             if (homeNewsData.getItems() != null) {
 
-                tv_error.setVisibility(View.GONE);
+                mTextViewError.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
 
                 LogUtil.e(homeNewsData.toString());
@@ -196,10 +195,13 @@ public class HomePager implements XRecyclerView.LoadingListener {
                 this.homeNewsDataItems.addAll(homeNewsData.getItems());
                 homeRecyclerViewAdapter.notifyDataSetChanged();
 
-                saveDataToDB(PULL_TO_REFRESH, homeNewsData.getItems());
+
+                new Thread(() -> {
+                    saveDataToDB(PULL_TO_REFRESH, homeNewsData.getItems());
+                }).start();
 
             } else if (homeNewsDataItems.size() < 1) {
-                tv_error.setVisibility(View.VISIBLE);
+                mTextViewError.setVisibility(View.VISIBLE);
             }
 
             mRecyclerView.refreshComplete();
@@ -208,14 +210,16 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
             if (homeNewsData.getItems() != null) {
 
-                tv_error.setVisibility(View.GONE);
+                mTextViewError.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
                 LogUtil.e(homeNewsData.toString());
                 homeNewsDataItems.addAll(homeNewsData.getItems());
                 homeRecyclerViewAdapter.notifyDataSetChanged();
 
-                saveDataToDB(LOAD_MORE, homeNewsData.getItems());
 
+                new Thread(() -> {
+                    saveDataToDB(LOAD_MORE, homeNewsData.getItems());
+                }).start();
             }
 
             mRecyclerView.loadMoreComplete();
@@ -238,7 +242,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         LogUtil.e("上拉刷新");
 
-        String inputTime = HomeItemDBUtil.getInput_time(mContext, position);
+        String inputTime = DaoUtil.getHomeItemInput_time(mContext, position);
 
         if (!TextUtils.isEmpty(inputTime)) {
             getDataMore(catId, inputTime);
@@ -268,7 +272,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
                 }, e -> {
 
                     ToastUtil.showToast(mContext, "网络君暂时出了一些问题");
-                    pb_pager_loading.setVisibility(View.GONE);
+                    mProgressBar.setVisibility(View.GONE);
                     mRecyclerView.refreshComplete();
                 });
 

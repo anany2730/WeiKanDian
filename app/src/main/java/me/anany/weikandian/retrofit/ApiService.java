@@ -1,6 +1,7 @@
 package me.anany.weikandian.retrofit;
 
 import me.anany.weikandian.NetworkConfig;
+import me.anany.weikandian.model.HomeChannel;
 import me.anany.weikandian.model.HomeNewsData;
 import me.anany.weikandian.model.HomeTitleData;
 import retrofit.http.GET;
@@ -85,5 +86,11 @@ public interface ApiService {
             @Query("sign") String sign
     );
 
+    /**
+     * 首页 【新闻列表数据 加载更多】
+     */
+    @GET(NetworkConfig.HOME_CHANNLE)
+    Observable<HomeChannel> getHomeChannel(
+    );
 
 }

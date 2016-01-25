@@ -4,8 +4,8 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -24,17 +24,12 @@ public class HomeNewsDetailActivity extends BaseActivity {
     @Bind(R.id.tv_title_text)
     TextView tv_title_text;
 
-    @Bind(R.id.btn_more)
-    Button btn_more;
-
-    @Bind(R.id.btn_back)
-    Button btn_back;
-
     @Bind(R.id.pb_title)
     ProgressBar pb_title;
 
-    @Bind(R.id.wv_content)
-    WebView wv_content;
+    @Bind(R.id.rl_webview)
+    RelativeLayout rl_webview;
+    private WebView wv_content;
 
 
     @OnClick({R.id.btn_back, R.id.btn_more})
@@ -55,6 +50,10 @@ public class HomeNewsDetailActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
+
+        wv_content = new WebView(getApplicationContext());
+        rl_webview.addView(wv_content);
+
         wv_content.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         WebSettings settings = wv_content.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -68,7 +67,7 @@ public class HomeNewsDetailActivity extends BaseActivity {
                 getSerializableExtra("news_data");
 
         if (newsDataItem != null) {
-
+            pb_title.setVisibility(View.VISIBLE);
             tv_title_text.setText(newsDataItem.getTitle());
             wv_content.loadUrl(newsDataItem.getUrl());
             wv_content.setWebChromeClient(new WebChromeClient() {
@@ -85,5 +84,13 @@ public class HomeNewsDetailActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (wv_content != null) {
+            wv_content.destroy();
+        }
+        super.onDestroy();
     }
 }

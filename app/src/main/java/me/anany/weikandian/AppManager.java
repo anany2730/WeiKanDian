@@ -3,7 +3,6 @@ package me.anany.weikandian;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 
 import java.util.LinkedList;
 
@@ -20,7 +19,6 @@ public class AppManager {
 	private AppManager() {
 	}
 
-	ViewPager s = null;
 
 	/**
 	 * 单一实例

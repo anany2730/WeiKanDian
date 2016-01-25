@@ -7,7 +7,7 @@ import de.greenrobot.daogenerator.Schema;
 public class MyDaoGenerator {
 
     public static void main(String args[]) throws Exception {
-        Schema schema = new Schema( 3, "me.anany.bean");
+        Schema schema = new Schema( 1, "me.anany.bean");
         // 1: 数据库版本号
         // com.xxx.bean:自动生成的Bean对象会放到/java-gen/com/xxx/bean中
 
@@ -20,8 +20,12 @@ public class MyDaoGenerator {
 
         addHomeTitle(schema);
 
+        addHomeChannel(schema);
+
         new DaoGenerator().generateAll(schema, args[0]);// 自动创建
     }
+
+
 
     private static void addHomeTitle(Schema schema) {
 
@@ -72,5 +76,18 @@ public class MyDaoGenerator {
         homeNewsDataItem.addStringProperty("behot_time");
         homeNewsDataItem.addStringProperty("extraImg");
 
+    }
+
+    private static void addHomeChannel(Schema schema) {
+
+        Entity homeChannelItem = schema.addEntity("HomeChannelDB");// 表名
+        homeChannelItem.setTableName("HomeChannelDB"); // 可以对表重命名
+
+        homeChannelItem.addLongProperty("id").primaryKey().index().autoincrement();
+        homeChannelItem.addStringProperty("channle_id");
+        homeChannelItem.addStringProperty("is_use");
+        homeChannelItem.addStringProperty("name");
+        homeChannelItem.addStringProperty("pic");
+        homeChannelItem.addStringProperty("sname");
     }
 }

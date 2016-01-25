@@ -7,14 +7,12 @@
     <include layout="@layout/app_titlebar" />
 
     <RelativeLayout
+        android:id="@+id/rl_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
-        <WebView
-            android:id="@+id/wv_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+
 
         <LinearLayout
             android:id="@+id/ll"

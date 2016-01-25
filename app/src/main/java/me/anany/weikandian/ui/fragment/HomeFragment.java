@@ -1,7 +1,9 @@
 package me.anany.weikandian.ui.fragment;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.trello.rxlifecycle.FragmentEvent;
 
@@ -9,8 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 import me.anany.bean.HomeTitleDB;
 import me.anany.dao.DaoSession;
+import me.anany.dao.DaoUtil;
 import me.anany.dao.HomeTitleDBDao;
 import me.anany.weikandian.App;
 import me.anany.weikandian.R;
@@ -18,7 +22,9 @@ import me.anany.weikandian.adapter.HomeTitlePagerAdapter;
 import me.anany.weikandian.base.BaseFragment;
 import me.anany.weikandian.model.HomeTitleData;
 import me.anany.weikandian.retrofit.RxApiThread;
+import me.anany.weikandian.ui.activity.AddHomeChannelActivity;
 import me.anany.weikandian.ui.pager.HomePager;
+import me.anany.weikandian.utils.LogUtil;
 
 /**
  * Created by anany on 16/1/6.  首页新闻 Fragment
@@ -29,14 +35,26 @@ public class HomeFragment extends BaseFragment {
 
     private static final int FROM_NET_WORK = 0;
     private static final int FROM_DB = 1;
+    private static final int ADD_CHANNEL = 1000;
+
+
+    @Bind(R.id.vp_home)
+    public ViewPager mViewPager;
 
     @Bind(R.id.tab_layout)
     TabLayout mTabLayout;
 
-    @Bind(R.id.vp_home)
-    ViewPager vp_home;
-
     private boolean hasInitData = false;
+
+    @OnClick({R.id.ll_add_channel})
+    void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ll_add_channel:
+                Intent intent = new Intent(mActivity, AddHomeChannelActivity.class);
+                startActivityForResult(intent, ADD_CHANNEL);
+                break;
+        }
+    }
 
     @Override
     protected int inflateLayoutId() {
@@ -49,9 +67,7 @@ public class HomeFragment extends BaseFragment {
         if (!hasInitData) {
 
             // 先从数据库取出所有Title，没有的话重新从网络获取
-            DaoSession daoSession = App.getDaoSession(mActivity);
-            HomeTitleDBDao titleDao = daoSession.getHomeTitleDBDao();
-            List<HomeTitleDB> homeTitleDataItems = titleDao.loadAll();
+            List<HomeTitleDB> homeTitleDataItems = DaoUtil.getHomeTitleList(mActivity);
 
             if (homeTitleDataItems != null && homeTitleDataItems.size() > 0) {
 
@@ -77,11 +93,14 @@ public class HomeFragment extends BaseFragment {
                         .compose(bindUntilEvent(FragmentEvent.PAUSE))
                         .map(HomeTitleData::getItems)
                         .subscribe(homeTitleItems ->
-                                handleResponseData(homeTitleItems, FROM_NET_WORK));
+                                handleResponseData(homeTitleItems, FROM_NET_WORK), e -> {
+                            LogUtil.e(e.getMessage());
+                        });
             }
 
         }
     }
+
 
     /**
      * 处理从服务器获取的顶部Title数据
@@ -99,25 +118,26 @@ public class HomeFragment extends BaseFragment {
 
         pagerList.add(new HomePager(this)); // 初始化推荐页
 
-
         for (int i = 0; i < homeTitleDataItems.size(); i++) {
             pagerList.add(new HomePager(this));
             titleTextList.add(homeTitleDataItems.get(i).getName());
         }
 
-        HomeTitlePagerAdapter titlePagerAdapter =
+        HomeTitlePagerAdapter mAdapter =
                 new HomeTitlePagerAdapter(pagerList, homeTitleDataItems, titleTextList);
+        mTabLayout.setTabsFromPagerAdapter(mAdapter);
+        mViewPager.setAdapter(mAdapter);
+        mTabLayout.setupWithViewPager(mViewPager);
 
-        //给ViewPager设置适配器
-        vp_home.setAdapter(titlePagerAdapter);
-        mTabLayout.setupWithViewPager(vp_home);
+        mViewPager.setCurrentItem(0);
 
-        vp_home.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
-            private int position;
+            int position;
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
 
             }
 
@@ -143,22 +163,23 @@ public class HomeFragment extends BaseFragment {
                     }
 
                     // 执行了initData方法，HomePager才会去获取数据
-                    pagerList.get(position).initData(catid,position);
+                    pagerList.get(position).initData(catid, position);
                     pagerList.get(position).setPagerHasInitData(true);
-                    pagerList.get(position).setRecyclerItemClickListener(position);
+                    pagerList.get(position).setRecyclerItemClickPosition(position + "");
                 }
             }
         });
 
-        pagerList.get(0).initData("0", 0);// 初始化加载第一页"推荐"
+        pagerList.get(0).initData("0", 0);
         pagerList.get(0).setPagerHasInitData(true);
 
-        //给Tabs设置适配器
-        mTabLayout.setTabsFromPagerAdapter(titlePagerAdapter);
-
         if (type == FROM_NET_WORK) {
-            saveHomeTitleDataToDB(homeTitleDataItems);
+
+            new Thread(() -> {
+                saveHomeTitleDataToDB(homeTitleDataItems);
+            }).start();
         }
+
     }
 
     /**

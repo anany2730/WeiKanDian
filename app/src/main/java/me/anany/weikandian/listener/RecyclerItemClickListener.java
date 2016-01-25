@@ -18,13 +18,10 @@ import me.anany.weikandian.utils.LogUtil;
  */
 public class RecyclerItemClickListener implements HomeRecyclerViewAdapter.ClickListener {
 
-    List<HomeNewsDataItem> homeNewsDataItems;
-    static int position;
+    String position;
     Context mContext;
 
-    public RecyclerItemClickListener(Context context, int position,
-                                     List<HomeNewsDataItem> homeNewsDataItems) {
-        this.homeNewsDataItems = homeNewsDataItems;
+    public RecyclerItemClickListener(Context context, String position) {
         this.mContext = context;
         this.position = position;
     }
@@ -35,10 +32,9 @@ public class RecyclerItemClickListener implements HomeRecyclerViewAdapter.ClickL
 
         LogUtil.e("itemListposition:" + itemListposition + "，pagerPosition" + position);
 
-
         Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
 
-        if (position == 0 && itemListposition > 1) {
+        if ("0".equals(position) && itemListposition > 1) {
 
             // 推荐页的列表，因为有头部header，所以数据position会有变化
             intent.putExtra("news_data", items.get(itemListposition - 2));
@@ -50,8 +46,7 @@ public class RecyclerItemClickListener implements HomeRecyclerViewAdapter.ClickL
         mContext.startActivity(intent);
     }
 
-    public void setPagerPosition(int position) {
-        LogUtil.e("赋值了：" + position);
+    public void setPagerPosition(String position) {
         this.position = position;
     }
 }

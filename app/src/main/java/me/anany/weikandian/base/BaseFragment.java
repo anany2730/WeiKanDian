@@ -32,6 +32,7 @@ public abstract class BaseFragment extends RxFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mActivity = activity;
+        prepare();
     }
 
     @Override
@@ -60,15 +61,8 @@ public abstract class BaseFragment extends RxFragment {
         if (parent != null) {
             parent.removeView(rootView);
         }
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-
-        super.onViewCreated(view, savedInstanceState);
-        prepare();
         initViews();
+        return rootView;
     }
 
     @Override

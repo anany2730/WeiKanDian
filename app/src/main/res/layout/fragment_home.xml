@@ -17,6 +17,21 @@
         app:tabSelectedTextColor="#FF00FF00"
         app:tabTextColor="@color/white" />
 
+    <LinearLayout
+        android:id="@+id/ll_add_channel"
+        android:orientation="horizontal"
+        android:layout_width="50dp"
+        android:background="@color/tab_add"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:layout_height="52dp">
+
+        <ImageView
+            android:background="@mipmap/channel_add_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+    </LinearLayout>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_home"
         android:layout_width="fill_parent"

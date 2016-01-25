@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="100dp"
+    android:layout_height="30dp"
+    android:background="@drawable/shape_btn_channel_grid_view_item"
+    android:clipToPadding="true"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:fitsSystemWindows="true">
+
+
+    <ImageView
+        android:id="@+id/iv_add"
+        android:background="@mipmap/channel_add_icon"
+        android:layout_marginRight="10dp"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:text="撒旦"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

@@ -1,5 +1,6 @@
 package me.anany.weikandian.base;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
@@ -16,12 +17,8 @@ import me.anany.weikandian.utils.LogUtil;
  */
 public abstract class BaseActivity extends RxAppCompatActivity {
 
-    private static final int ACTIVITY_RESUME = 0;
-    private static final int ACTIVITY_STOP = 1;
-    private static final int ACTIVITY_PAUSE = 2;
-    private static final int ACTIVITY_DESTROY = 3;
 
-    public int activityState;
+    public Context mContext;
 
     // 是否允许全屏
     private boolean mAllowFullScreen = true;
@@ -56,6 +53,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         initViews();
 
         AppManager.getAppManager().addActivity(this);
+
+        mContext = this;
     }
 
     protected abstract int inflateLayoutId();

@@ -25,7 +25,7 @@ import me.anany.weikandian.model.HomeNewsDataItem;
  */
 public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-    private static ClickListener clickListener;
+    private ClickListener clickListener;
 
     public interface ClickListener {
         void onItemClick(int position, View v,List<HomeNewsDataItem> items);

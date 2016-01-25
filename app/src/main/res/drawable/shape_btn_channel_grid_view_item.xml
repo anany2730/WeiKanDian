@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- 边框 -->
+    <item>
+        <shape>
+
+            <!-- 边框颜色 -->
+            <solid android:color="@color/tv_line" />
+            <!-- 边框圆角值 -->
+            <corners
+                android:bottomLeftRadius="14dp"
+                android:bottomRightRadius="14dp"
+                android:topLeftRadius="14dp"
+                android:topRightRadius="14dp" />
+        </shape>
+    </item>
+
+    <!-- 主体 -->
+    <item
+        android:bottom="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:top="1dp">
+        <shape>
+
+            <!-- 主体内容颜色值 -->
+            <solid android:color="@color/white" />
+            <!-- 主体圆角值 -->
+            <corners
+                android:bottomLeftRadius="14dp"
+                android:bottomRightRadius="14dp"
+                android:topLeftRadius="14dp"
+                android:topRightRadius="14dp" />
+        </shape>
+    </item>
+
+</layer-list>

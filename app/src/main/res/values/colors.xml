@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF4081</color>
     <color name="tab_bg_color">#f4f3ef</color>
@@ -11,4 +11,7 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="white_gray">#e1e1e1</color>
+    <color name="tab_add">#111</color>
+
+    <color name="gray_bg">#F1F1F1</color>
 </resources>
