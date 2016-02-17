@@ -21,6 +21,7 @@ import me.anany.weikandian.adapter.DragGridViewAdapter;
 import me.anany.weikandian.base.BaseActivity;
 import me.anany.weikandian.model.HomeChannel;
 import me.anany.weikandian.retrofit.RxApiThread;
+import me.anany.weikandian.utils.LogUtil;
 import me.anany.weikandian.utils.ToastUtil;
 import me.anany.weikandian.widget.DragGridView;
 import rx.Observable;
@@ -63,6 +64,7 @@ public class AddHomeChannelActivity extends BaseActivity implements AdapterView.
         mTextViewTitle.setText("频道管理");
 
         initData();
+
     }
 
     void initData() {
@@ -100,21 +102,7 @@ public class AddHomeChannelActivity extends BaseActivity implements AdapterView.
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (position != 0 && position != 1) {
-
-            final ImageView moveImageView = getView(view);
-
-            if (moveImageView != null) {
-
-                TextView newTextView = (TextView) view.findViewById(R.id.tv_name);
-                final int[] startLocation = new int[2];
-                newTextView.getLocationInWindow(startLocation);
-
-                final HomeTitleDB channel = ((DragGridViewAdapter) parent.getAdapter()).getItem(position);//获取点击的频道内容
-
-
-            }
-        }
+        LogUtil.e("点击了item，"+position);
     }
 
     /**

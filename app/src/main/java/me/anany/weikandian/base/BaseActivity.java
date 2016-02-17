@@ -102,4 +102,5 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         app.getWatcher().watch(this);
         AppManager.getAppManager().finishActivity(this);
     }
+
 }
