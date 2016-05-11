@@ -66,7 +66,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View v = null;
+        View v;
         ViewHolder holer = null;
 
         switch (viewType) {
