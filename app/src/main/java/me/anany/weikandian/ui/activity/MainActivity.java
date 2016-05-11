@@ -30,23 +30,23 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
     private LayoutInflater layoutInflater;
 
     //定义数组来存放Fragment界面
-    private Class fragmentArray[] = { HomeFragment.class, MineFragment.class,
-            SubscribeFragment.class, DiscoverFragment.class, BillboardFragment.class };
+    private Class[] fragmentArray = {HomeFragment.class, MineFragment.class,
+            SubscribeFragment.class, DiscoverFragment.class, BillboardFragment.class};
 
     //定义数组来存放按钮图片
-    private int mImageViewArray[] = { R.drawable.tab_home_btn, R.drawable.tab_subscribe_btn,
+    private int[] mImageViewArray = {R.drawable.tab_home_btn, R.drawable.tab_subscribe_btn,
             R.drawable.tab_billboard_btn,
             R.drawable.tab_discover_btn,
-            R.drawable.tab_mine_btn };
+            R.drawable.tab_mine_btn};
 
     //定义数组来存放文字颜色
-    private int mTextColorArray[] = { R.drawable.tab_home_text_color, R.drawable.tab_subscribe_text_color,
+    private int[] mTextColorArray = {R.drawable.tab_home_text_color, R.drawable.tab_subscribe_text_color,
             R.drawable.tab_billboard_text_color,
             R.drawable.tab_discover_text_color,
-            R.drawable.tab_mine_text_color };
+            R.drawable.tab_mine_text_color};
 
     //Tab选项卡的文字
-    private String mTextViewArray[] = { "首页", "订阅", "排行榜", "发现", "我的" };
+    private String[] mTextViewArray = {"首页", "订阅", "排行榜", "发现", "我的"};
 
     @Override
     protected int inflateLayoutId() {
