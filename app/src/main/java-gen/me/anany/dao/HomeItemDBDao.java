@@ -50,6 +50,9 @@ public class HomeItemDBDao extends AbstractDao<HomeItemDB, Long> {
         public final static Property Article_type = new Property(24, String.class, "article_type", false, "ARTICLE_TYPE");
         public final static Property Behot_time = new Property(25, String.class, "behot_time", false, "BEHOT_TIME");
         public final static Property ExtraImg = new Property(26, String.class, "extraImg", false, "EXTRA_IMG");
+
+        private Properties() {
+        }
     };
 
 

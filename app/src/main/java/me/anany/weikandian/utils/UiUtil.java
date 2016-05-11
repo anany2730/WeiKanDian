@@ -9,6 +9,9 @@ import android.content.Context;
  */
 public class UiUtil {
 
+    private UiUtil() {
+    }
+
     /**
      * dip转为 px
      */

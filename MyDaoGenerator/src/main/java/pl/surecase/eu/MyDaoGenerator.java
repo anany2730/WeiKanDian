@@ -6,6 +6,9 @@ import de.greenrobot.daogenerator.Schema;
 
 public class MyDaoGenerator {
 
+    private MyDaoGenerator() {
+    }
+
     public static void main(String args[]) throws Exception {
         Schema schema = new Schema( 1, "me.anany.bean");
         // 1: 数据库版本号

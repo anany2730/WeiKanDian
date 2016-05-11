@@ -17,6 +17,9 @@ public class NetworkUtil {
 
     private static final String TAG = NetworkUtil.class.getSimpleName();
 
+    private NetworkUtil() {
+    }
+
     /**
      * 获取ConnectivityManager
      */
