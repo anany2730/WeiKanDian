@@ -119,7 +119,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
         mRecyclerView.setLoadingListener(this);
 
         // 由于该死的ViewPager缓存机制，第一次初始化的时候会加载两页pager
-        recyclerItemClickListener = new RecyclerItemClickListener(mContext, position + "");
+        recyclerItemClickListener = new RecyclerItemClickListener(mContext, Integer.toString(position));
 
         homeRecyclerViewAdapter.setOnItemClickListener(recyclerItemClickListener);
 
@@ -152,12 +152,12 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         if (!hasInitData) {
 
-            requestTime = System.currentTimeMillis() + "";
+            requestTime = Long.toString(System.currentTimeMillis());
             requestTime = requestTime.substring(0, 10);
 
             App.getApi().getHomeNewsData("WIFI", "2.0.4",
                     catId, "c1005", "Nexus 4", "android", "6416405", "1453274918",
-                    "7f08bcd287cc5096", "22", "5.1.1", "2", requestTime, step + "",
+                    "7f08bcd287cc5096", "22", "5.1.1", "2", requestTime, Integer.toString(step),
                     "9279697", "355136051237892", "204",
                     "fcd163d6ed68ef79784848eb1b1fc842")
                     .compose(RxApiThread.convert())
@@ -253,7 +253,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
     private void getDataMore(String catId, String maxTime) {
 
         this.catId = catId;
-        this.requestTime = System.currentTimeMillis() + "";
+        this.requestTime = Long.toString(System.currentTimeMillis());
         this.requestTime = requestTime.substring(0, 10);
 
         App.getApi().getHomeNewsDataMore("WIFI", "2.0.4", catId, "c1005",
@@ -288,7 +288,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
         for (HomeNewsDataItem homeNewsDataItem : homeNewsDataItems) {
 
             HomeItemDB homeItemDB = new HomeItemDB();
-            homeItemDB.setPosition(position + "");
+            homeItemDB.setPosition(Integer.toString(position));
             homeItemDB.setCt(requestTime);
 
             // input_time是作为加载更多的max_time参数请求服务器
