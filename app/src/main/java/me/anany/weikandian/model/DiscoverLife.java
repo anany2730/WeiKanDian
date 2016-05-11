@@ -23,7 +23,7 @@ public class DiscoverLife {
      * openuidi : 7f08bcd287cc5096
      * os_api : 22
      * os_version : 5.1.1
-     * phone_sim : 1 / 2 / 3  【1 meybe means China Mobile】
+     * phone_sim : 1 / 2 / 3  【1 meybe means China MOBILE】
      * request_time : current request time
      * uid : 9279697
      * uuid : phone IMIE
