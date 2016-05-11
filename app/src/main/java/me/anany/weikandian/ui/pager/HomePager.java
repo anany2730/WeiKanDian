@@ -6,16 +6,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import me.anany.bean.HomeItemDB;
 import me.anany.dao.DaoSession;
-import me.anany.dao.HomeItemDBDao;
 import me.anany.dao.DaoUtil;
+import me.anany.dao.HomeItemDBDao;
 import me.anany.weikandian.App;
 import me.anany.weikandian.R;
 import me.anany.weikandian.adapter.HomeRecyclerViewAdapter;
@@ -25,15 +21,17 @@ import me.anany.weikandian.model.HomeNewsDataItem;
 import me.anany.weikandian.retrofit.RxApiThread;
 import me.anany.weikandian.ui.fragment.HomeFragment;
 import me.anany.weikandian.utils.LogUtil;
-import me.anany.weikandian.utils.ToastUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by anany on 16/1/7.
- * <p>
- * <p>
+ *
+ *
  * ViewPager 适配器 填充的 Pager【返回View给HomeTitlePagerAdapter适配器】
- * <p>
- * <p>
+ *
+ *
  * Email:zhujun2730@gmail.com
  */
 public class HomePager implements XRecyclerView.LoadingListener {
@@ -41,40 +39,43 @@ public class HomePager implements XRecyclerView.LoadingListener {
     private final int PULL_TO_REFRESH = 0;
     private final int LOAD_MORE = 1;
 
-    public int position; // 每一页的位置
-
-    public Context mContext;
-    public List<HomeNewsDataItem> homeNewsDataItems;
-    private boolean hasInitData = false;
-    private String catId;// 传入顶部Title的ID，用来分别获取每页Pager的数据
-
     private XRecyclerView mRecyclerView;
+    private RecyclerItemClickListener recyclerItemClickListener;
     private HomeRecyclerViewAdapter homeRecyclerViewAdapter;
     private TextView mTextViewError;
     private ProgressBar mProgressBar;
 
+    private Context mContext;
+    private List<HomeNewsDataItem> homeNewsDataItems;
+
     private int step = 1;// 每次下拉刷新，递增传递此参数获取新的数据
+    private int position; // 每一页的位置
     private String requestTime;
-    private RecyclerItemClickListener recyclerItemClickListener;
+    private String catId;// 传入顶部Title的ID，用来分别获取每页Pager的数据
+
+    private boolean hasInitData = false;
 
     public HomePager(HomeFragment homeFragment) {
         this.mContext = homeFragment.mActivity;
-
     }
 
     /**
      * 初始化View
      *
      * @param pagerPosition 每页的位置
+     *
      * @return 每一页的视图View【将View集中缓存到LinkedHashMap ，避免多次inflate】
      */
     public View inflateView(String pagerPosition) {
 
-        LogUtil.e("HomePager  inflate  View ...");
+        LogUtil.e("HomePager "+pagerPosition+" inflate  View ...");
 
         View mRootView = View.inflate(mContext, R.layout.pager_home, null);
 
         mRecyclerView = (XRecyclerView) mRootView.findViewById(R.id.recycle_view);
+        mRecyclerView.setLaodingMoreProgressStyle(ProgressStyle.CubeTransition);
+        mRecyclerView.setRefreshProgressStyle(ProgressStyle.CubeTransition);
+
         mTextViewError = (TextView) mRootView.findViewById(R.id.tv_error);
         mProgressBar = (ProgressBar) mRootView.findViewById(R.id.pb_pager_loading);
 
@@ -134,7 +135,6 @@ public class HomePager implements XRecyclerView.LoadingListener {
         this.hasInitData = hasInitData;
     }
 
-
     public void setRecyclerItemClickPosition(String position) {
         recyclerItemClickListener.setPagerPosition(position);
     }
@@ -150,14 +150,10 @@ public class HomePager implements XRecyclerView.LoadingListener {
         this.position = position;
         this.catId = catId;
 
-        LogUtil.e("catID：" + catId);
-
         if (!hasInitData) {
 
-            requestTime =
-                    System.currentTimeMillis() + "";
+            requestTime = System.currentTimeMillis() + "";
             requestTime = requestTime.substring(0, 10);
-
 
             App.getApi().getHomeNewsData("WIFI", "2.0.4",
                     catId, "c1005", "Nexus 4", "android", "6416405", "1453274918",
@@ -169,7 +165,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
                         handleResponseData(homeNewsData, PULL_TO_REFRESH);
                     }, e -> {
 
-                        ToastUtil.showToast(mContext, "网络君暂时出了一些问题");
+                        App.toast("网络君暂时出了一些问题");
                         mProgressBar.setVisibility(View.GONE);
                         mRecyclerView.refreshComplete();
 
@@ -206,6 +202,8 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
             mRecyclerView.refreshComplete();
 
+            step ++;
+
         } else { // 加载更多
 
             if (homeNewsData.getItems() != null) {
@@ -228,11 +226,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     @Override
     public void onRefresh() {
-        LogUtil.e("下拉刷新");
-
         setPagerHasInitData(false); // 重置加载状态为可加载
-
-        step++;
 
         initData(catId, position);
     }
@@ -240,8 +234,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
     @Override
     public void onLoadMore() {
 
-        LogUtil.e("上拉刷新");
-
+        // 先从数据库获取当前pager最后一条数据的时间
         String inputTime = DaoUtil.getHomeItemInput_time(mContext, position);
 
         if (!TextUtils.isEmpty(inputTime)) {
@@ -254,15 +247,16 @@ public class HomePager implements XRecyclerView.LoadingListener {
     /**
      * 加载更多请求
      *
-     * @param catid 每页Pager的 catid
+     * @param catId 每页Pager的 catId
+     * @param maxTime 每页Pager最后一条数据的时间
      */
-    public void getDataMore(String catid, String maxTime) {
+    private void getDataMore(String catId, String maxTime) {
 
-        this.catId = catid;
+        this.catId = catId;
         this.requestTime = System.currentTimeMillis() + "";
         this.requestTime = requestTime.substring(0, 10);
 
-        App.getApi().getHomeNewsDataMore("WIFI", "2.0.4", catid, "c1005",
+        App.getApi().getHomeNewsDataMore("WIFI", "2.0.4", catId, "c1005",
                 "Nexus 4", "android", "6416405", maxTime, "7f08bcd287cc5096",
                 "22", "5.1.1", "2", requestTime, "9279697", "355136051237892", "204",
                 "3d3f7cf7d82228f8fd555c9c20961d99")
@@ -271,13 +265,11 @@ public class HomePager implements XRecyclerView.LoadingListener {
                     handleResponseData(homeNewsData, LOAD_MORE);
                 }, e -> {
 
-                    ToastUtil.showToast(mContext, "网络君暂时出了一些问题");
+                    App.toast("网络君暂时出了一些问题");
                     mProgressBar.setVisibility(View.GONE);
                     mRecyclerView.refreshComplete();
                 });
-
     }
-
 
     private void saveDataToDB(int type, List<HomeNewsDataItem> homeNewsDataItems) {
 
@@ -307,22 +299,18 @@ public class HomePager implements XRecyclerView.LoadingListener {
         }
     }
 
-    class HeaderItemClickListener implements View.OnClickListener {
+    private class HeaderItemClickListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.tv_fav://兴趣选择
-                    ToastUtil.showToast(mContext, "点击了兴趣选择");
+                case R.id.tv_fav:   //兴趣选择
                     break;
                 case R.id.tv_today:
-                    ToastUtil.showToast(mContext, "点击了今日看点");
                     break;
                 case R.id.tv_sign:
-                    ToastUtil.showToast(mContext, "点击了每日签到");
                     break;
                 case R.id.tv_invited_friends:
-                    ToastUtil.showToast(mContext, "点击了邀请好友");
                     break;
             }
         }

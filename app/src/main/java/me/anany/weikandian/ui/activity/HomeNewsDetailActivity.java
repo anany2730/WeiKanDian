@@ -5,14 +5,17 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import butterknife.Bind;
 import butterknife.OnClick;
+import me.anany.weikandian.BuildConfig;
 import me.anany.weikandian.R;
 import me.anany.weikandian.base.BaseActivity;
 import me.anany.weikandian.model.HomeNewsDataItem;
+
+import java.lang.reflect.Field;
+
+import static me.anany.weikandian.R.id.pb_title;
 
 /**
  * Created by anany on 16/1/19.
@@ -22,14 +25,13 @@ import me.anany.weikandian.model.HomeNewsDataItem;
 public class HomeNewsDetailActivity extends BaseActivity {
 
     @Bind(R.id.tv_title_text)
-    TextView tv_title_text;
+    TextView mTextViewTitle;
 
-    @Bind(R.id.pb_title)
-    ProgressBar pb_title;
+    @Bind(pb_title)
+    ProgressBar mProgressBarTitle;
 
-    @Bind(R.id.rl_webview)
-    RelativeLayout rl_webview;
-    private WebView wv_content;
+    @Bind(R.id.wv_content)
+    WebView mWebView;
 
 
     @OnClick({R.id.btn_back, R.id.btn_more})
@@ -51,33 +53,30 @@ public class HomeNewsDetailActivity extends BaseActivity {
     @Override
     protected void initViews() {
 
-        wv_content = new WebView(getApplicationContext());
-        rl_webview.addView(wv_content);
-
-        wv_content.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        WebSettings settings = wv_content.getSettings();
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
 
         initData();
     }
 
-    void initData() {
+    private void initData() {
 
         HomeNewsDataItem newsDataItem = (HomeNewsDataItem) getIntent().
                 getSerializableExtra("news_data");
 
         if (newsDataItem != null) {
-            pb_title.setVisibility(View.VISIBLE);
-            tv_title_text.setText(newsDataItem.getTitle());
-            wv_content.loadUrl(newsDataItem.getUrl());
-            wv_content.setWebChromeClient(new WebChromeClient() {
+            mProgressBarTitle.setVisibility(View.VISIBLE);
+            mTextViewTitle.setText(newsDataItem.getTitle());
+            mWebView.loadUrl(newsDataItem.getUrl());
+            mWebView.setWebChromeClient(new WebChromeClient() {
 
                 @Override
                 public void onProgressChanged(WebView view, int newProgress) {
 
                     if (newProgress == 100) {
                         // 网页加载完成
-                        pb_title.setVisibility(View.INVISIBLE);
+                        mProgressBarTitle.setVisibility(View.INVISIBLE);
                     } else {
 
                     }
@@ -88,9 +87,44 @@ public class HomeNewsDetailActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (wv_content != null) {
-            wv_content.destroy();
-        }
         super.onDestroy();
+
+        if (android.os.Build.VERSION.SDK_INT < 16) {
+            try {
+                Field field = WebView.class.getDeclaredField("mWebViewCore");
+                field = field.getType().getDeclaredField("mBrowserFrame");
+                field = field.getType().getDeclaredField("sConfigCallback");
+                field.setAccessible(true);
+                field.set(null, null);
+            } catch (NoSuchFieldException e) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace();
+                }
+            } catch (IllegalAccessException e) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            try {
+                Field sConfigCallback = Class.forName("android.webkit.BrowserFrame").getDeclaredField("sConfigCallback");
+                if (sConfigCallback != null) {
+                    sConfigCallback.setAccessible(true);
+                    sConfigCallback.set(null, null);
+                }
+            } catch (NoSuchFieldException e) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace();
+                }
+            } catch (ClassNotFoundException e) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace();
+                }
+            } catch (IllegalAccessException e) {
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

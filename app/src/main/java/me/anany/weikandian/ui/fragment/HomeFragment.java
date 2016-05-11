@@ -4,14 +4,9 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-
-import com.trello.rxlifecycle.FragmentEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.OnClick;
+import com.trello.rxlifecycle.FragmentEvent;
 import me.anany.bean.HomeTitleDB;
 import me.anany.dao.DaoSession;
 import me.anany.dao.DaoUtil;
@@ -26,6 +21,9 @@ import me.anany.weikandian.ui.activity.AddHomeChannelActivity;
 import me.anany.weikandian.ui.pager.HomePager;
 import me.anany.weikandian.utils.LogUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by anany on 16/1/6.  首页新闻 Fragment
  * <p>
@@ -37,14 +35,16 @@ public class HomeFragment extends BaseFragment {
     private static final int FROM_DB = 1;
     private static final int ADD_CHANNEL = 1000;
 
+    @Bind(R.id.vp_home) ViewPager mViewPager;
 
-    @Bind(R.id.vp_home)
-    public ViewPager mViewPager;
-
-    @Bind(R.id.tab_layout)
-    TabLayout mTabLayout;
+    @Bind(R.id.tab_layout) TabLayout mTabLayout;
 
     private boolean hasInitData = false;
+
+    @Override
+    protected int inflateLayoutId() {
+        return R.layout.fragment_home;
+    }
 
     @OnClick({R.id.ll_add_channel})
     void onClick(View view) {
@@ -54,11 +54,6 @@ public class HomeFragment extends BaseFragment {
                 startActivityForResult(intent, ADD_CHANNEL);
                 break;
         }
-    }
-
-    @Override
-    protected int inflateLayoutId() {
-        return R.layout.fragment_home;
     }
 
     @Override
@@ -116,28 +111,26 @@ public class HomeFragment extends BaseFragment {
         // 内容页Pager的List
         List<HomePager> pagerList = new ArrayList<>();
 
-        pagerList.add(new HomePager(this)); // 初始化推荐页
+        // 初始化推荐页
+        pagerList.add(new HomePager(this));
 
         for (int i = 0; i < homeTitleDataItems.size(); i++) {
             pagerList.add(new HomePager(this));
             titleTextList.add(homeTitleDataItems.get(i).getName());
         }
 
-        HomeTitlePagerAdapter mAdapter =
-                new HomeTitlePagerAdapter(pagerList, homeTitleDataItems, titleTextList);
+        HomeTitlePagerAdapter mAdapter = new HomeTitlePagerAdapter(pagerList, titleTextList);
         mTabLayout.setTabsFromPagerAdapter(mAdapter);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-
         mViewPager.setCurrentItem(0);
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
-            int position;
+            private int position;
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
 
             }
 

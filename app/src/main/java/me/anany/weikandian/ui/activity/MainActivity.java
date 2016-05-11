@@ -56,11 +56,7 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
     @Override
     protected void initViews() {
 
-
-        //实例化布局对象
         layoutInflater = LayoutInflater.from(this);
-
-        //实例化TabHost对象，得到TabHost
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
@@ -99,16 +95,6 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
     }
 
     @Override
-    public void onBackPressed() {
-        if ((System.currentTimeMillis() - exitTime) > 2000) {
-            App.toast("再按一次退出程序");
-            exitTime = System.currentTimeMillis();
-        } else {
-            AppManager.getAppManager().AppExit(this);
-        }
-    }
-
-    @Override
     public void onTabChanged(String tabId) {
         final int size = mTabHost.getTabWidget().getTabCount();
         for (int i = 0; i < size; i++) {
@@ -122,4 +108,13 @@ public class MainActivity extends BaseActivity implements OnTabChangeListener {
         supportInvalidateOptionsMenu();
     }
 
+    @Override
+    public void onBackPressed() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            App.toast("再按一次退出程序");
+            exitTime = System.currentTimeMillis();
+        } else {
+            AppManager.getAppManager().AppExit(this);
+        }
+    }
 }

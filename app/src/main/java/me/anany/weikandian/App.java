@@ -85,6 +85,7 @@ public class App extends Application {
      * @return
      */
     public static DaoSession getDaoSession(Context context) {
+
         if (daoSession == null) {
             if (daoMaster == null) {
                 daoMaster = getDaoMaster(context);

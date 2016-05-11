@@ -42,19 +42,17 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         super.onCreate(savedInstanceState);
 
         LogUtil.i("---------onCreate ");
-
         // 竖屏锁定
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         setContentView(inflateLayoutId());
         ButterKnife.bind(this);
+        mContext = this;
 
         prepare();
         initViews();
 
         AppManager.getAppManager().addActivity(this);
-
-        mContext = this;
     }
 
     protected abstract int inflateLayoutId();
@@ -97,7 +95,9 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         LogUtil.i("---------onDestroy ");
+
         ButterKnife.unbind(this);
+
         final App app = (App) getApplication();
         app.getWatcher().watch(this);
         AppManager.getAppManager().finishActivity(this);

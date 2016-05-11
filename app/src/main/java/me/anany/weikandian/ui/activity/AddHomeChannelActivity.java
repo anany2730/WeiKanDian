@@ -5,14 +5,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.trello.rxlifecycle.ActivityEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.OnClick;
+import com.trello.rxlifecycle.ActivityEvent;
 import me.anany.bean.HomeTitleDB;
 import me.anany.dao.DaoUtil;
 import me.anany.weikandian.App;
@@ -22,9 +17,11 @@ import me.anany.weikandian.base.BaseActivity;
 import me.anany.weikandian.model.HomeChannel;
 import me.anany.weikandian.retrofit.RxApiThread;
 import me.anany.weikandian.utils.LogUtil;
-import me.anany.weikandian.utils.ToastUtil;
 import me.anany.weikandian.widget.DragGridView;
 import rx.Observable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -40,7 +37,7 @@ public class AddHomeChannelActivity extends BaseActivity implements AdapterView.
     @Bind(R.id.gv_channel)
     DragGridView mGridViewChannel;
 
-    private DragGridViewAdapter dragGridViewAdapter;
+    private DragGridViewAdapter mAdapter;
 
 
     @OnClick({R.id.btn_back, R.id.btn_more})
@@ -71,9 +68,8 @@ public class AddHomeChannelActivity extends BaseActivity implements AdapterView.
 
         List<HomeTitleDB> homeTitleDataItems = DaoUtil.getHomeTitleList(mContext);
 
-        dragGridViewAdapter =
-                new DragGridViewAdapter(this, homeTitleDataItems);
-        mGridViewChannel.setAdapter(dragGridViewAdapter);
+        mAdapter = new DragGridViewAdapter(this, homeTitleDataItems);
+        mGridViewChannel.setAdapter(mAdapter);
 
         mGridViewChannel.setOnItemClickListener(this);
 
@@ -84,7 +80,7 @@ public class AddHomeChannelActivity extends BaseActivity implements AdapterView.
                 .subscribe(this::handleResponseData,
 
                         throwable -> {
-                            ToastUtil.showToast(this, "网络连接失败");
+                            App.toast("网络连接失败");
                         });
     }
 

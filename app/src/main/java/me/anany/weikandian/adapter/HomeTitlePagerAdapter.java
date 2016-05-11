@@ -3,12 +3,10 @@ package me.anany.weikandian.adapter;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import me.anany.weikandian.ui.pager.HomePager;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import me.anany.weikandian.model.HomeTitleData;
-import me.anany.weikandian.ui.pager.HomePager;
 
 /**
  * Created by anany on 16/1/8.
@@ -22,21 +20,16 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
 
     private List<HomePager> pagerList;
     private List<String> titleTextList;
-    private List<HomeTitleData.HomeTitleItem> homeTitleDataItems;
 
     private LinkedHashMap<Integer, View> views = new LinkedHashMap<>();
 
     /**
      * @param pagerList          内容页Pager的集合
-     * @param homeTitleDataItems Title的数据源
      * @param titleTextList      Title 文字的集合
      */
-    public HomeTitlePagerAdapter(List<HomePager> pagerList,
-                                 List<HomeTitleData.HomeTitleItem> homeTitleDataItems,
-                                 List<String> titleTextList) {
+    public HomeTitlePagerAdapter(List<HomePager> pagerList, List<String> titleTextList) {
         this.pagerList = pagerList;
         this.titleTextList = titleTextList;
-        this.homeTitleDataItems = homeTitleDataItems;
     }
 
     @Override
