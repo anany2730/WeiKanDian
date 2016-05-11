@@ -29,6 +29,9 @@ public class HomeChannelDBDao extends AbstractDao<HomeChannelDB, Long> {
         public final static Property Name = new Property(3, String.class, "name", false, "NAME");
         public final static Property Pic = new Property(4, String.class, "pic", false, "PIC");
         public final static Property Sname = new Property(5, String.class, "sname", false, "SNAME");
+
+        private Properties() {
+        }
     };
 
 

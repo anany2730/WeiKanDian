@@ -16,6 +16,9 @@ import me.anany.weikandian.utils.LogUtil;
  */
 public class DaoUtil {
 
+    private DaoUtil() {
+    }
+
     public static String getHomeItemInput_time(Context mContext, int position) {
 
         String input_time = "";

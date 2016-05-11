@@ -32,6 +32,9 @@ public class HomeTitleDBDao extends AbstractDao<HomeTitleDB, Long> {
         public final static Property Description = new Property(6, String.class, "description", false, "DESCRIPTION");
         public final static Property Is_new = new Property(7, String.class, "is_new", false, "IS_NEW");
         public final static Property Is_use = new Property(8, String.class, "is_use", false, "IS_USE");
+
+        private Properties() {
+        }
     };
 
 
