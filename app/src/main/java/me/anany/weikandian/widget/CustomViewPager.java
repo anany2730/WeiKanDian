@@ -345,7 +345,7 @@ public class CustomViewPager extends ViewGroup {
             setScrollingCacheEnabled(false);
             return;
         }
-        if (!always && mCurItem == item && mItems.size() != 0) {
+        if (!always && mCurItem == item && !mItems.isEmpty()) {
             setScrollingCacheEnabled(false);
             return;
         }
@@ -669,7 +669,7 @@ public class CustomViewPager extends ViewGroup {
         }
 
         // Add any new pages we need at the end.
-        lastPos = mItems.size() > 0 ? mItems.get(mItems.size()-1).position : -1;
+        lastPos = !mItems.isEmpty() ? mItems.get(mItems.size()-1).position : -1;
         if (lastPos < endPos) {
             lastPos++;
             lastPos = lastPos > startPos ? lastPos : startPos;

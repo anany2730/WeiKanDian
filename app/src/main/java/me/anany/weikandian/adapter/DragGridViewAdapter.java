@@ -71,7 +71,7 @@ public class DragGridViewAdapter extends BaseAdapter {
 
     @Override
     public HomeTitleDB getItem(int position) {
-        if (channelList != null && channelList.size() != 0) {
+        if (channelList != null && !channelList.isEmpty()) {
             return channelList.get(position);
         }
         return null;
