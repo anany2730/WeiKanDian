@@ -26,7 +26,6 @@ public class MyDaoGenerator {
     }
 
 
-
     private static void addHomeTitle(Schema schema) {
 
         Entity homeTitle = schema.addEntity("HomeTitleDB");// 表名

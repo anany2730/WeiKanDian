@@ -50,8 +50,6 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.trello:rxlifecycle:0.3.0'
     compile 'com.trello:rxlifecycle-components:0.3.0'
-    compile 'com.jakewharton.rxbinding:rxbinding:0.3.0'
-    compile 'com.jakewharton.rxbinding:rxbinding-support-v4:0.3.0'
     compile 'com.jcodecraeer:xrecyclerview:1.2.6'
     compile 'de.greenrobot:greendao:2.0.0'
 

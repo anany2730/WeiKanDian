@@ -87,9 +87,9 @@ public class HomePager implements XRecyclerView.LoadingListener {
     /**
      * 初始化RecyclerView ，但并不立即加载数据
      *
-     * @param pagerPosition 当前页的postion
+     * @param pagerPosition 当前页的position
      */
-    public void initRefresh(String pagerPosition) {
+    private void initRefresh(String pagerPosition) {
 
         homeNewsDataItems = new ArrayList<>();
 
@@ -175,7 +175,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     private void handleResponseData(HomeNewsData homeNewsData, int type) {
 
-        if (type == PULL_TO_REFRESH) {
+        if (type == PULL_TO_REFRESH) { // 下拉刷新
 
             mProgressBar.setVisibility(View.GONE);
             setPagerHasInitData(true);
@@ -278,23 +278,17 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
         // 如果是下拉刷新的时候先把之前的数据删除了
         if (type == PULL_TO_REFRESH) {
-
             String sql = "delete from  HomeItemDB where position = " + position;
-
             daoSession.getDatabase().execSQL(sql);
-
         }
 
         for (HomeNewsDataItem homeNewsDataItem : homeNewsDataItems) {
-
             HomeItemDB homeItemDB = new HomeItemDB();
             homeItemDB.setPosition(Integer.toString(position));
             homeItemDB.setCt(requestTime);
-
             // input_time是作为加载更多的max_time参数请求服务器
             homeItemDB.setInput_time(homeNewsDataItem.getInput_time());
             homeItemDB.setCatid(homeNewsDataItem.getCatid());
-
             homeNewsDataItemDao.insert(homeItemDB);
         }
     }

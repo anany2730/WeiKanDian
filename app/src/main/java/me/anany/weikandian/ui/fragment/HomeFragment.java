@@ -114,9 +114,9 @@ public class HomeFragment extends BaseFragment {
         // 初始化推荐页
         pagerList.add(new HomePager(this));
 
-        for (int i = 0; i < homeTitleDataItems.size(); i++) {
+        for (HomeTitleData.HomeTitleItem homeTitleDataItem : homeTitleDataItems) {
             pagerList.add(new HomePager(this));
-            titleTextList.add(homeTitleDataItems.get(i).getName());
+            titleTextList.add(homeTitleDataItem.getName());
         }
 
         HomeTitlePagerAdapter mAdapter = new HomeTitlePagerAdapter(pagerList, titleTextList);
@@ -125,7 +125,7 @@ public class HomeFragment extends BaseFragment {
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setCurrentItem(0);
 
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             private int position;
 
@@ -142,20 +142,19 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onPageScrollStateChanged(int state) {
 
-                // 当滑动结束的时候，才去加载数据
-                // 实现【当快速切换ViewPager的时候不会加载数据】
+                // 当滑动结束的时候，才去加载数据。实现【当快速切换ViewPager的时候不会加载数据】
                 if (state == 0) {
 
                     String catid;// 每页请求的catid
 
-                    // 当position == 0 时，catid == 0;其他从集合中取
+                    // 当position == 0 时，catid == 0; 其他从集合中取catid
                     if (position == 0) {
                         catid = "0";
                     } else {
                         catid = homeTitleDataItems.get(position - 1).getId();
                     }
 
-                    // 执行了initData方法，HomePager才会去获取数据
+                    // 执行了initData方法，HomePager才会去联网获取数据
                     pagerList.get(position).initData(catid, position);
                     pagerList.get(position).setPagerHasInitData(true);
                     pagerList.get(position).setRecyclerItemClickPosition(Integer.toString(position));
