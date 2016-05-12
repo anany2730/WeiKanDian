@@ -5,12 +5,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
-
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
-
-import me.anany.dao.DaoMaster;
-import me.anany.dao.DaoSession;
+import me.anany.weikandian.db.dao.DaoMaster;
+import me.anany.weikandian.db.dao.DaoSession;
 import me.anany.weikandian.retrofit.ApiService;
 import retrofit.GsonConverterFactory;
 import retrofit.Retrofit;

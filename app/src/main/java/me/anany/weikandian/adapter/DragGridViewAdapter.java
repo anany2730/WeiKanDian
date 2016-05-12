@@ -7,15 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
-import java.util.List;
-
-import me.anany.bean.HomeTitleDB;
-import me.anany.dao.DaoSession;
-import me.anany.dao.DaoUtil;
-import me.anany.dao.HomeTitleDBDao;
 import me.anany.weikandian.App;
 import me.anany.weikandian.R;
+import me.anany.weikandian.db.dao.DaoSession;
+import me.anany.weikandian.db.dao.DaoUtil;
+import me.anany.weikandian.db.dao.HomeTitleDBDao;
+import me.anany.weikandian.db.entity.HomeTitleDB;
+
+import java.util.List;
 
 public class DragGridViewAdapter extends BaseAdapter {
     /**

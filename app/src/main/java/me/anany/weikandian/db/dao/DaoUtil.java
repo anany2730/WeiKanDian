@@ -1,13 +1,12 @@
-package me.anany.dao;
+package me.anany.weikandian.db.dao;
 
 import android.content.Context;
 import android.database.Cursor;
+import me.anany.weikandian.App;
+import me.anany.weikandian.db.entity.HomeTitleDB;
+import me.anany.weikandian.utils.LogUtil;
 
 import java.util.List;
-
-import me.anany.bean.HomeTitleDB;
-import me.anany.weikandian.App;
-import me.anany.weikandian.utils.LogUtil;
 
 /**
  * Created by anany on 16/1/21.

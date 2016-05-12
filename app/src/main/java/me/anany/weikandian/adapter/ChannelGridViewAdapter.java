@@ -6,11 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import me.anany.weikandian.R;
+import me.anany.weikandian.db.entity.HomeTitleDB;
 
 import java.util.List;
-
-import me.anany.bean.HomeTitleDB;
-import me.anany.weikandian.R;
 
 /**
  * Created by anany on 16/1/21.
