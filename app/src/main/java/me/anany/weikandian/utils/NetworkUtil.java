@@ -32,10 +32,10 @@ public class NetworkUtil {
     }
     //
     //public enum NetSubType {
-    //    None(1),
-    //    Mobile(2),
-    //    Wifi(4),
-    //    Other(8);
+    //    NONE(1),
+    //    MOBILE(2),
+    //    WIFI(4),
+    //    OTHER(8);
     //
     //    NetType(int value) {
     //        this.value = value;
@@ -76,14 +76,14 @@ public class NetworkUtil {
         if (net != null) {
             switch (net.getType()) {
                 case ConnectivityManager.TYPE_WIFI:
-                    return NetType.Wifi;
+                    return NetType.WIFI;
                 case ConnectivityManager.TYPE_MOBILE:
-                    return NetType.Mobile;
+                    return NetType.MOBILE;
                 default:
-                    return NetType.Other;
+                    return NetType.OTHER;
             }
         }
-        return NetType.None;
+        return NetType.NONE;
     }
 
     /**
@@ -232,7 +232,7 @@ public class NetworkUtil {
     /**
      * GPRS    2G(2.5) General Packet Radia Service 114kbps
      * EDGE    2G(2.75G) Enhanced Data Rate for GSM Evolution 384kbps
-     * UMTS    3G WCDMA 联通3G Universal Mobile Telecommunication System 完整的3G移动通信技术标准
+     * UMTS    3G WCDMA 联通3G Universal MOBILE Telecommunication System 完整的3G移动通信技术标准
      * CDMA    2G 电信 Code Division Multiple Access 码分多址
      * EVDO_0  3G (EVDO 全程 CDMA2000 1xEV-DO) Evolution - Data Only (Data Optimized) 153.6kps - 2.4mbps 属于3G
      * EVDO_A  3G 1.8mbps - 3.1mbps 属于3G过渡，3.5G
@@ -252,7 +252,7 @@ public class NetworkUtil {
         int type = getConnectedTypeINT(context);
         switch (type) {
             case ConnectivityManager.TYPE_WIFI:
-                return NetWorkType.Wifi;
+                return NetWorkType.WIFI;
             case ConnectivityManager.TYPE_MOBILE:
             case ConnectivityManager.TYPE_MOBILE_DUN:
             case ConnectivityManager.TYPE_MOBILE_HIPRI:
@@ -265,7 +265,7 @@ public class NetworkUtil {
                     case TelephonyManager.NETWORK_TYPE_CDMA:
                     case TelephonyManager.NETWORK_TYPE_1xRTT:
                     case TelephonyManager.NETWORK_TYPE_IDEN:
-                        return NetWorkType.Net2G;
+                        return NetWorkType.NET_2_G;
                     case TelephonyManager.NETWORK_TYPE_UMTS:
                     case TelephonyManager.NETWORK_TYPE_EVDO_0:
                     case TelephonyManager.NETWORK_TYPE_EVDO_A:
@@ -275,22 +275,22 @@ public class NetworkUtil {
                     case TelephonyManager.NETWORK_TYPE_EVDO_B:
                     case TelephonyManager.NETWORK_TYPE_EHRPD:
                     case TelephonyManager.NETWORK_TYPE_HSPAP:
-                        return NetWorkType.Net3G;
+                        return NetWorkType.NET_3_G;
                     case TelephonyManager.NETWORK_TYPE_LTE:
-                        return NetWorkType.Net4G;
+                        return NetWorkType.NET_4_G;
                     default:
-                        return NetWorkType.UnKnown;
+                        return NetWorkType.UN_KNOWN;
                 }
             default:
-                return NetWorkType.UnKnown;
+                return NetWorkType.UN_KNOWN;
         }
     }
 
     public enum NetType {
-        None(1),
-        Mobile(2),
-        Wifi(4),
-        Other(8);
+        NONE(1),
+        MOBILE(2),
+        WIFI(4),
+        OTHER(8);
 
         public int value;
 
@@ -300,11 +300,11 @@ public class NetworkUtil {
     }
 
     public enum NetWorkType {
-        UnKnown(-1),
-        Wifi(1),
-        Net2G(2),
-        Net3G(3),
-        Net4G(4);
+        UN_KNOWN(-1),
+        WIFI(1),
+        NET_2_G(2),
+        NET_3_G(3),
+        NET_4_G(4);
 
         public int value;
 

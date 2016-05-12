@@ -22,7 +22,7 @@ public class BillboardData {
      * device_type : 2 【 meybe means Android】
      * phone_code : 186xxxxxx
      * phone_newwork : WIFI/3G/4G
-     * Phone_sim : 1 / 2 / 3  【1 meybe means China Mobile】
+     * Phone_sim : 1 / 2 / 3  【1 meybe means China MOBILE】
      * uid : 9279697
      * uuid : 13cb971cfd30403dbc80314d4216e6ad
      * sign : 31a8f2e3b1c71932245178cf33367042
