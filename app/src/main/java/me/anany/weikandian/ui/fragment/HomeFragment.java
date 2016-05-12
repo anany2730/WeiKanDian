@@ -64,7 +64,7 @@ public class HomeFragment extends BaseFragment {
             // 先从数据库取出所有Title，没有的话重新从网络获取
             List<HomeTitleDB> homeTitleDataItems = DaoUtil.getHomeTitleList(mActivity);
 
-            if (homeTitleDataItems != null && homeTitleDataItems.size() > 0) {
+            if (homeTitleDataItems != null && !homeTitleDataItems.isEmpty()) {
 
                 List<HomeTitleData.HomeTitleItem> homeTitleItems = new ArrayList<>();
 

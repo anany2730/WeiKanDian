@@ -196,7 +196,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
                     saveDataToDB(PULL_TO_REFRESH, homeNewsData.getItems());
                 }).start();
 
-            } else if (homeNewsDataItems.size() < 1) {
+            } else if (homeNewsDataItems.isEmpty()) {
                 mTextViewError.setVisibility(View.VISIBLE);
             }
 
