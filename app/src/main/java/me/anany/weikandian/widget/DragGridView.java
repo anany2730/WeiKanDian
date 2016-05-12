@@ -286,8 +286,6 @@ public class DragGridView extends GridView {
 
                 // 循环遍历每一个
                 for (int i = 0; i < adsMovCount; i++) {
-                    to_x = x_value;
-                    to_y = y_value;
                     // 如果手指是像右或者向下一行移动，那么其余的item就像左移动
                     if (movecount > 0) {
                         // 挨个判断要移动item与被拖拽的item是否是同一行的
