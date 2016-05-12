@@ -6,7 +6,7 @@ import de.greenrobot.daogenerator.Schema;
 
 public class MyDaoGenerator {
 
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
         Schema schema = new Schema( 1, "me.anany.bean");
         // 1: 数据库版本号
         // com.xxx.bean:自动生成的Bean对象会放到/java-gen/com/xxx/bean中
