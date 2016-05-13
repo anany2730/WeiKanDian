@@ -9,7 +9,7 @@ import butterknife.OnClick;
 import com.trello.rxlifecycle.FragmentEvent;
 import me.anany.weikandian.App;
 import me.anany.weikandian.R;
-import me.anany.weikandian.adapter.HomeTitlePagerAdapter;
+import me.anany.weikandian.adapter.HomeTabPagerAdapter;
 import me.anany.weikandian.base.BaseFragment;
 import me.anany.weikandian.db.dao.DaoSession;
 import me.anany.weikandian.db.dao.DaoUtil;
@@ -112,14 +112,14 @@ public class HomeFragment extends BaseFragment {
         List<HomePager> pagerList = new ArrayList<>();
 
         // 初始化推荐页
-        pagerList.add(new HomePager(this));
+        pagerList.add(new HomePager(mActivity));
 
         for (HomeTitleData.HomeTitleItem homeTitleDataItem : homeTitleDataItems) {
-            pagerList.add(new HomePager(this));
+            pagerList.add(new HomePager(mActivity));
             titleTextList.add(homeTitleDataItem.getName());
         }
 
-        HomeTitlePagerAdapter mAdapter = new HomeTitlePagerAdapter(pagerList, titleTextList);
+        HomeTabPagerAdapter mAdapter = new HomeTabPagerAdapter(pagerList, titleTextList);
         mTabLayout.setTabsFromPagerAdapter(mAdapter);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);

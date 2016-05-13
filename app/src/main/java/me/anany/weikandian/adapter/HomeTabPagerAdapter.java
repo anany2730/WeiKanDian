@@ -16,7 +16,7 @@ import java.util.List;
  * <p>
  * Email:zhujun2730@gmail.com
  */
-public class HomeTitlePagerAdapter extends PagerAdapter {
+public class HomeTabPagerAdapter extends PagerAdapter {
 
     private List<HomePager> pagerList;
     private List<String> titleTextList;
@@ -27,7 +27,7 @@ public class HomeTitlePagerAdapter extends PagerAdapter {
      * @param pagerList          内容页Pager的集合
      * @param titleTextList      Title 文字的集合
      */
-    public HomeTitlePagerAdapter(List<HomePager> pagerList, List<String> titleTextList) {
+    public HomeTabPagerAdapter(List<HomePager> pagerList, List<String> titleTextList) {
         this.pagerList = pagerList;
         this.titleTextList = titleTextList;
     }

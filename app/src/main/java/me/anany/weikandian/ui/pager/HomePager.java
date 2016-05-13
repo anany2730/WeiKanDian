@@ -19,7 +19,6 @@ import me.anany.weikandian.listener.RecyclerItemClickListener;
 import me.anany.weikandian.model.HomeNewsData;
 import me.anany.weikandian.model.HomeNewsDataItem;
 import me.anany.weikandian.retrofit.RxApiThread;
-import me.anany.weikandian.ui.fragment.HomeFragment;
 import me.anany.weikandian.utils.LogUtil;
 
 import java.util.ArrayList;
@@ -55,8 +54,8 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
     private boolean hasInitData = false;
 
-    public HomePager(HomeFragment homeFragment) {
-        this.mContext = homeFragment.mActivity;
+    public HomePager(Context context) {
+        this.mContext = context;
     }
 
     /**
