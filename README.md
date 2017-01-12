@@ -5,7 +5,7 @@
 
 ## 项目介绍
 * 主页架构采用 FragmentTabHost 实现启动主页 activity 默认只加载一页 fragment，点击底部 tab 切换 fragment 实现了复用
-* 采用 Rxjava + Retrofit2.0 进行网络访问，线程切换
+* 采用 Retrofit2.0 进行网络访问，Rxjava 进行线程切换
 * 数据库采用 GreenDao 进行本地缓存
 * 采用 RecyclerView 实现首页新闻多 item 布局
 * 采用 TabLayout 实现首页顶部 Tab 切换
