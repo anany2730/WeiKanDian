@@ -10,7 +10,7 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:background="@color/tablayout_bg"
+        android:background="@color/tab_layout_bg"
         app:tabGravity="center"
         app:tabIndicatorColor="#FF00FF00"
         app:tabMode="scrollable"

@@ -6,8 +6,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import me.anany.weikandian.App;
 import me.anany.weikandian.R;
 import me.anany.weikandian.adapter.HomeRecyclerViewAdapter;
@@ -21,16 +26,13 @@ import me.anany.weikandian.model.HomeNewsDataItem;
 import me.anany.weikandian.retrofit.RxApiThread;
 import me.anany.weikandian.utils.LogUtil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by anany on 16/1/7.
- *
- *
+ * <p>
+ * <p>
  * ViewPager 适配器 填充的 Pager【返回View给HomeTitlePagerAdapter适配器】
- *
- *
+ * <p>
+ * <p>
  * Email:zhujun2730@gmail.com
  */
 public class HomePager implements XRecyclerView.LoadingListener {
@@ -47,10 +49,10 @@ public class HomePager implements XRecyclerView.LoadingListener {
     private Context mContext;
     private List<HomeNewsDataItem> homeNewsDataItems;
 
-    private int step = 1;// 每次下拉刷新，递增传递此参数获取新的数据
-    private int position; // 每一页的位置
-    private String requestTime;
-    private String catId;// 传入顶部Title的ID，用来分别获取每页Pager的数据
+    private int step = 1;       //  每次下拉刷新，递增传递此参数获取新的数据
+    private int position;       //  每一页的位置
+    private String requestTime; //  请求的时间
+    private String catId;       //  传入顶部Title的ID，用来分别获取每页Pager的数据
 
     private boolean hasInitData = false;
 
@@ -62,23 +64,22 @@ public class HomePager implements XRecyclerView.LoadingListener {
      * 初始化View
      *
      * @param pagerPosition 每页的位置
-     *
      * @return 每一页的视图View【将View集中缓存到LinkedHashMap ，避免多次inflate】
      */
     public View inflateView(String pagerPosition) {
 
-        LogUtil.e("HomePager "+pagerPosition+" inflate  View ...");
+        LogUtil.e("HomePager " + pagerPosition + " inflate  View ...");
 
         View mRootView = View.inflate(mContext, R.layout.pager_home, null);
 
         mRecyclerView = (XRecyclerView) mRootView.findViewById(R.id.recycle_view);
-        mRecyclerView.setLaodingMoreProgressStyle(ProgressStyle.CubeTransition);
+        mRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.CubeTransition);
         mRecyclerView.setRefreshProgressStyle(ProgressStyle.CubeTransition);
 
         mTextViewError = (TextView) mRootView.findViewById(R.id.tv_error);
         mProgressBar = (ProgressBar) mRootView.findViewById(R.id.pb_pager_loading);
 
-        initRefresh(pagerPosition);
+        initPagerView(pagerPosition);
 
         return mRootView;
     }
@@ -88,7 +89,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
      *
      * @param pagerPosition 当前页的position
      */
-    private void initRefresh(String pagerPosition) {
+    private void initPagerView(String pagerPosition) {
 
         homeNewsDataItems = new ArrayList<>();
 
@@ -121,7 +122,6 @@ public class HomePager implements XRecyclerView.LoadingListener {
         recyclerItemClickListener = new RecyclerItemClickListener(mContext, Integer.toString(position));
 
         homeRecyclerViewAdapter.setOnItemClickListener(recyclerItemClickListener);
-
     }
 
     /**
@@ -201,7 +201,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
 
             mRecyclerView.refreshComplete();
 
-            step ++;
+            step++;
 
         } else { // 加载更多
 
@@ -213,13 +213,12 @@ public class HomePager implements XRecyclerView.LoadingListener {
                 homeNewsDataItems.addAll(homeNewsData.getItems());
                 homeRecyclerViewAdapter.notifyDataSetChanged();
 
-
                 new Thread(() -> {
                     saveDataToDB(LOAD_MORE, homeNewsData.getItems());
                 }).start();
             }
 
-            mRecyclerView.loadMoreComplete();
+            mRecyclerView.postDelayed(() -> mRecyclerView.loadMoreComplete(), 2000);
         }
     }
 
@@ -246,7 +245,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
     /**
      * 加载更多请求
      *
-     * @param catId 每页Pager的 catId
+     * @param catId   每页Pager的 catId
      * @param maxTime 每页Pager最后一条数据的时间
      */
     private void getDataMore(String catId, String maxTime) {

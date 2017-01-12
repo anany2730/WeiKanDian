@@ -33,7 +33,6 @@ public class HomeNewsDetailActivity extends BaseActivity {
     @Bind(R.id.wv_content)
     WebView mWebView;
 
-
     @OnClick({R.id.btn_back, R.id.btn_more})
     void onClick(View view) {
         switch (view.getId()) {

@@ -9,7 +9,6 @@ import java.util.List;
 import me.anany.weikandian.adapter.HomeRecyclerViewAdapter;
 import me.anany.weikandian.model.HomeNewsDataItem;
 import me.anany.weikandian.ui.activity.HomeNewsDetailActivity;
-import me.anany.weikandian.utils.LogUtil;
 
 /**
  * Created by anany on 16/1/21.
@@ -18,35 +17,31 @@ import me.anany.weikandian.utils.LogUtil;
  */
 public class RecyclerItemClickListener implements HomeRecyclerViewAdapter.ClickListener {
 
-    String position;
-    Context mContext;
+    private String mPosition;
+    private Context mContext;
 
     public RecyclerItemClickListener(Context context, String position) {
-        this.mContext = context;
-        this.position = position;
+        mContext = context;
+        mPosition = position;
     }
 
     @Override
-    public void onItemClick(int itemListposition, View v, List<HomeNewsDataItem> items) {
-
-
-        LogUtil.e("itemListposition:" + itemListposition + "，pagerPosition" + position);
+    public void onItemClick(int itemListPosition, View v, List<HomeNewsDataItem> items) {
 
         Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
 
-        if ("0".equals(position) && itemListposition > 1) {
-
+        if ("0".equals(mPosition) && itemListPosition > 1) {
             // 推荐页的列表，因为有头部header，所以数据position会有变化
-            intent.putExtra("news_data", items.get(itemListposition - 2));
+            intent.putExtra("news_data", items.get(itemListPosition - 2));
 
         } else {
-            intent.putExtra("news_data", items.get(itemListposition - 1));
+            intent.putExtra("news_data", items.get(itemListPosition - 1));
 
         }
         mContext.startActivity(intent);
     }
 
     public void setPagerPosition(String position) {
-        this.position = position;
+        this.mPosition = position;
     }
 }

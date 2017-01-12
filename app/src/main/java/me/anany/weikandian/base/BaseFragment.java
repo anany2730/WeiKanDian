@@ -10,23 +10,20 @@ import android.view.ViewGroup;
 import com.trello.rxlifecycle.components.support.RxFragment;
 
 import butterknife.ButterKnife;
-import me.anany.weikandian.App;
 import me.anany.weikandian.utils.LogUtil;
 
 /**
  * Fragment基类
  * <p/>
- * Created by __Berial___
+ * Created by anany
  */
 public abstract class BaseFragment extends RxFragment {
 
     public Activity mActivity;
-    /**
-     * Fragment当前状态是否可见
-     */
+
     protected boolean isVisible;
 
-    private View rootView;//缓存Fragment view
+    private View rootView;
 
     @Override
     public void onAttach(Activity activity) {
@@ -45,23 +42,13 @@ public abstract class BaseFragment extends RxFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if (rootView == null) {
-            LogUtil.v("BaseFragment InflateView ---");
-            rootView = inflater.inflate(inflateLayoutId(), container, false);
-            ButterKnife.bind(this, rootView);
-        }
+        LogUtil.e("Fragment onCreateView");
 
-        /**
-         *
-         *   缓存的rootView需要判断是否已经被加过parent，
-         *   如果有parent需要从parent删除，
-         *   要不然会发生这个rootview已经有parent的错误。
-         */
-        ViewGroup parent = (ViewGroup) rootView.getParent();
-        if (parent != null) {
-            parent.removeView(rootView);
-        }
+        rootView = inflater.inflate(inflateLayoutId(), container, false);
+        ButterKnife.bind(this, rootView);
+
         initViews();
+
         return rootView;
     }
 
@@ -74,8 +61,6 @@ public abstract class BaseFragment extends RxFragment {
     public void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
-        final App app = (App) getActivity().getApplication();
-        app.getWatcher().watch(this);
     }
 
     @LayoutRes

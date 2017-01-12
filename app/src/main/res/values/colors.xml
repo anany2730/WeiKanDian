@@ -3,15 +3,15 @@
     <color name="colorPrimary">#ffffff</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="tab_bg_color">#f4f3ef</color>
+    <color name="title_bar_color">#202020</color>
+    <color name="bottom_tab_bg_color">#f4f3ef</color>
     <color name="main_green">#0bbe1a</color>
     <color name="gray">#868686</color>
     <color name="tv_line">#cacaca</color>
-    <color name="tablayout_bg">#202020</color>
+    <color name="tab_layout_bg">#202020</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="white_gray">#e1e1e1</color>
-    <color name="tab_add">#292828</color>
-
+    <color name="tab_add">#1d1d1d</color>
     <color name="gray_bg">#F1F1F1</color>
 </resources>

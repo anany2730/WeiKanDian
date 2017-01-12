@@ -2,19 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:orientation="vertical">
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/tv_line" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:orientation="vertical">
 
 
@@ -24,7 +19,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center|left"
             android:layout_marginTop="10dp"
-            android:text="玩第三方第三方第三方第三方"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
@@ -69,7 +63,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_op_mark"
-                android:text="热点资讯大全"
                 android:textSize="10sp" />
 
             <TextView
@@ -107,6 +100,10 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/tv_line" />
 
 </LinearLayout>
 

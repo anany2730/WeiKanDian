@@ -9,7 +9,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'me.tatarka:gradle-retrolambda:3.2.4'
         classpath 'de.greenrobot:greendao-generator:2.1.0'
         // NOTE: Do not place your application dependencies here; they belong
@@ -20,6 +20,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        mavenCentral()
     }
 }
 
@@ -34,14 +35,24 @@ task greendaoGenerate << {
     schema.hasKeepSectionsByDefault = true
     schema.useActiveEntitiesByDefault = true;
 
-    Entity homeTitle = schema.addEntity("HomeTitleDB");// 表名
-    homeTitle.setTableName("HomeTitleDB"); // 可以对表重命名
-    homeTitle.addLongProperty("id").primaryKey().index().autoincrement();
+    addEntity(schema);
+
+    new DaoGenerator().generateAll(schema, "app/src/main/java", null, "app/src/test/java");
+
+
+}
+
+public void addEntity(Schema schema ){
+
+    Entity homeTitle = schema.addEntity("HomeTitleDB");     // 表名
+    homeTitle.setTableName("HomeTitleDB");                  // 可以对表重命名
+    homeTitle.addLongProperty("id")
+            .primaryKey().index().autoincrement();
     homeTitle.addStringProperty("name");
     homeTitle.addStringProperty("sort");
-    homeTitle.addStringProperty("ut");// 时间
+    homeTitle.addStringProperty("ut");                      // 时间
     homeTitle.addStringProperty("pic");
-    homeTitle.addStringProperty("cat_id");// cat_id
+    homeTitle.addStringProperty("cat_id");                  // cat_id
     homeTitle.addStringProperty("description");
     homeTitle.addStringProperty("is_new");
     homeTitle.addStringProperty("is_use");
@@ -85,6 +96,5 @@ task greendaoGenerate << {
     homeChannelItem.addStringProperty("name");
     homeChannelItem.addStringProperty("pic");
     homeChannelItem.addStringProperty("sname");
-
-    new DaoGenerator().generateAll(schema, "app/src/main/java", null, "app/src/test/java");
 }
+

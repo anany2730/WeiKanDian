@@ -7,16 +7,13 @@ import android.os.Bundle;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
-import me.anany.weikandian.App;
-import me.anany.weikandian.AppManager;
 import me.anany.weikandian.utils.LogUtil;
 
 /**
  * 基类
- * Created by Berial on 16/1/6.
+ * modify by anany on 17/1/6.
  */
 public abstract class BaseActivity extends RxAppCompatActivity {
-
 
     public Context mContext;
 
@@ -51,8 +48,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
         prepare();
         initViews();
-
-        AppManager.getAppManager().addActivity(this);
     }
 
     protected abstract int inflateLayoutId();
@@ -68,39 +63,9 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void initViews(){}
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        LogUtil.i("---------onStart ");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LogUtil.i("---------onResume ");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        LogUtil.i("---------onPause ");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        LogUtil.i("---------onStop ");
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtil.i("---------onDestroy ");
-
         ButterKnife.unbind(this);
-
-        final App app = (App) getApplication();
-        app.getWatcher().watch(this);
-        AppManager.getAppManager().finishActivity(this);
     }
 
 }

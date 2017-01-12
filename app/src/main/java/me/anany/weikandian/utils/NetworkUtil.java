@@ -30,19 +30,6 @@ public class NetworkUtil {
     public static TelephonyManager getTelephonyManager(Context context) {
         return (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     }
-    //
-    //public enum NetSubType {
-    //    NONE(1),
-    //    MOBILE(2),
-    //    WIFI(4),
-    //    OTHER(8);
-    //
-    //    NetType(int value) {
-    //        this.value = value;
-    //    }
-    //
-    //    public int value;
-    //}
 
     /**
      * 判断网络连接是否有效（此时可传输数据）。
@@ -169,35 +156,6 @@ public class NetworkUtil {
         }
         // 反射失败，默认开启
         return true;
-    }
-
-    /**
-     * 打印当前各种网络状态
-     *
-     * @return boolean
-     */
-    public static boolean printNetworkInfo(Context context) {
-        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null) {
-            NetworkInfo in = connectivity.getActiveNetworkInfo();
-            Log.i(TAG, "-------------$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$-------------");
-            Log.i(TAG, "getActiveNetworkInfo: " + in);
-            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null) {
-                for (int i = 0; i < info.length; i++) {
-                    // if (info[i].getType() == ConnectivityManager.TYPE_WIFI) {
-                    Log.i(TAG, "NetworkInfo[" + i + "]isAvailable : " + info[i].isAvailable());
-                    Log.i(TAG, "NetworkInfo[" + i + "]isConnected : " + info[i].isConnected());
-                    Log.i(TAG, "NetworkInfo[" + i + "]isConnectedOrConnecting : " + info[i].isConnectedOrConnecting());
-                    Log.i(TAG, "NetworkInfo[" + i + "]: " + info[i]);
-                    // }
-                }
-                Log.i(TAG, "\n");
-            } else {
-                Log.i(TAG, "getAllNetworkInfo is null");
-            }
-        }
-        return false;
     }
 
     /**

@@ -4,8 +4,8 @@ import me.anany.weikandian.NetworkConfig;
 import me.anany.weikandian.model.HomeChannel;
 import me.anany.weikandian.model.HomeNewsData;
 import me.anany.weikandian.model.HomeTitleData;
-import retrofit.http.GET;
-import retrofit.http.Query;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -87,7 +87,7 @@ public interface ApiService {
     );
 
     /**
-     * 首页 【新闻列表数据 加载更多】
+     * 获取频道
      */
     @GET(NetworkConfig.HOME_CHANNLE)
     Observable<HomeChannel> getHomeChannel(
