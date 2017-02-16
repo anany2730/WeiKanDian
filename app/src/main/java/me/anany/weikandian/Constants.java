@@ -9,4 +9,5 @@ package me.anany.weikandian;
  */
 public class Constants {
     public static final String DB_NAME = "weikandian";
+    public static final String DB_NAME_ENCRYPTED = "weikandian_encrypted";
 }

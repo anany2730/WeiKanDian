@@ -74,16 +74,6 @@
                         android:textSize="10sp" />
                 </RelativeLayout>
 
-                <me.anany.weikandian.widget.DragGridView
-                    android:id="@+id/gv_channel"
-                    android:horizontalSpacing="20dp"
-                    android:verticalSpacing="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:numColumns="3">
-
-                </me.anany.weikandian.widget.DragGridView>
 
             </LinearLayout>
 

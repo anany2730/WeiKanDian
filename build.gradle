@@ -1,9 +1,4 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
-import de.greenrobot.daogenerator.DaoGenerator
-import de.greenrobot.daogenerator.Entity
-import de.greenrobot.daogenerator.Schema
-
 buildscript {
     repositories {
         jcenter()
@@ -11,7 +6,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'me.tatarka:gradle-retrolambda:3.2.4'
-        classpath 'de.greenrobot:greendao-generator:2.1.0'
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.2.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -20,7 +15,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        mavenCentral()
+        maven { url "https://jitpack.io" }
     }
 }
 
@@ -28,73 +23,5 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task greendaoGenerate << {
-    def pack = 'me.anany.weikandian.db'
-    Schema schema = new Schema(1, "${pack}.entity");
-    schema.defaultJavaPackageDao = "${pack}.dao"
-    schema.hasKeepSectionsByDefault = true
-    schema.useActiveEntitiesByDefault = true;
 
-    addEntity(schema);
-
-    new DaoGenerator().generateAll(schema, "app/src/main/java", null, "app/src/test/java");
-
-
-}
-
-public void addEntity(Schema schema ){
-
-    Entity homeTitle = schema.addEntity("HomeTitleDB");     // 表名
-    homeTitle.setTableName("HomeTitleDB");                  // 可以对表重命名
-    homeTitle.addLongProperty("id")
-            .primaryKey().index().autoincrement();
-    homeTitle.addStringProperty("name");
-    homeTitle.addStringProperty("sort");
-    homeTitle.addStringProperty("ut");                      // 时间
-    homeTitle.addStringProperty("pic");
-    homeTitle.addStringProperty("cat_id");                  // cat_id
-    homeTitle.addStringProperty("description");
-    homeTitle.addStringProperty("is_new");
-    homeTitle.addStringProperty("is_use");
-
-    Entity homeNewsDataItem = schema.addEntity("HomeItemDB");// 表名
-    homeNewsDataItem.setTableName("HomeItemDB"); // 可以对表重命名
-    homeNewsDataItem.addLongProperty("id").primaryKey().index().autoincrement();
-    homeNewsDataItem.addStringProperty("is_read");
-    homeNewsDataItem.addStringProperty("position");
-    homeNewsDataItem.addStringProperty("step");
-    homeNewsDataItem.addStringProperty("ct");
-    homeNewsDataItem.addStringProperty("input_time");
-    homeNewsDataItem.addStringProperty("catid");
-    homeNewsDataItem.addStringProperty("thumb");
-    homeNewsDataItem.addStringProperty("idx");
-    homeNewsDataItem.addStringProperty("account_id");
-    homeNewsDataItem.addStringProperty("isext");
-    homeNewsDataItem.addStringProperty("title");
-    homeNewsDataItem.addStringProperty("read_num");
-    homeNewsDataItem.addStringProperty("like_num");
-    homeNewsDataItem.addStringProperty("share_num");
-    homeNewsDataItem.addStringProperty("wurl");
-    homeNewsDataItem.addStringProperty("video");
-    homeNewsDataItem.addStringProperty("image_type");
-    homeNewsDataItem.addStringProperty("op_mark");
-    homeNewsDataItem.addStringProperty("op_mark_iurl");
-    homeNewsDataItem.addStringProperty("op_mark_icolor");
-    homeNewsDataItem.addStringProperty("account_name");
-    homeNewsDataItem.addStringProperty("url");
-    homeNewsDataItem.addStringProperty("is_cache");
-    homeNewsDataItem.addStringProperty("article_type");
-    homeNewsDataItem.addStringProperty("behot_time");
-    homeNewsDataItem.addStringProperty("extraImg");
-
-
-    Entity homeChannelItem = schema.addEntity("HomeChannelDB");// 表名
-    homeChannelItem.setTableName("HomeChannelDB"); // 可以对表重命名
-    homeChannelItem.addLongProperty("id").primaryKey().index().autoincrement();
-    homeChannelItem.addStringProperty("channle_id");
-    homeChannelItem.addStringProperty("is_use");
-    homeChannelItem.addStringProperty("name");
-    homeChannelItem.addStringProperty("pic");
-    homeChannelItem.addStringProperty("sname");
-}
 

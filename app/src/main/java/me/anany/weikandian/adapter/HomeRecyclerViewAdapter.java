@@ -16,7 +16,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import me.anany.weikandian.R;
-import me.anany.weikandian.model.HomeNewsDataItem;
+import me.anany.weikandian.entry.HomeNewsData;
 
 /**
  * Created by anany on 16/1/7.
@@ -28,16 +28,16 @@ import me.anany.weikandian.model.HomeNewsDataItem;
 public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private Context context;
-    private List<HomeNewsDataItem> items;
+    private List<HomeNewsData.ItemsBean> items;
     private ClickListener clickListener;
 
-    public HomeRecyclerViewAdapter(Context context, List<HomeNewsDataItem> items) {
+    public HomeRecyclerViewAdapter(Context context, List<HomeNewsData.ItemsBean> items) {
         this.items = items;
         this.context = context;
     }
 
     public interface ClickListener {
-        void onItemClick(int position, View v, List<HomeNewsDataItem> items);
+        void onItemClick(int position, View v, List<HomeNewsData.ItemsBean> items);
     }
 
     public void setOnItemClickListener(ClickListener clickListener) {
@@ -89,7 +89,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        HomeNewsDataItem homeNewsDataItem = items.get(position);
+        HomeNewsData.ItemsBean homeNewsDataItem = items.get(position);
 
         switch (getItemViewType(position)) {
             case 1:
@@ -105,7 +105,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<ViewHolder> {
             case 2:
                 ViewHolderTwo ViewHolderTwo = (ViewHolderTwo) holder;
                 ViewHolderTwo.tvTitle.setText(homeNewsDataItem.getTitle());
-                ViewHolderTwo.tvTitle.setText(homeNewsDataItem.getAccount_name());
+                ViewHolderTwo.tvAccountName.setText(homeNewsDataItem.getAccount_name());
                 ViewHolderTwo.tvReadNum.setText("阅读 " + homeNewsDataItem.getRead_num());
                 Glide.with(context)
                         .load(homeNewsDataItem.getExtra().get(0))

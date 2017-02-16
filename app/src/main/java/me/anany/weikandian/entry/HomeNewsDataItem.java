@@ -1,4 +1,4 @@
-package me.anany.weikandian.model;
+package me.anany.weikandian.entry;
 
 import java.io.Serializable;
 import java.util.List;

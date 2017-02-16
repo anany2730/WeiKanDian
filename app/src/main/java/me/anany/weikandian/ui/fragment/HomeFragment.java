@@ -4,25 +4,24 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.OnClick;
-import com.trello.rxlifecycle.FragmentEvent;
 import me.anany.weikandian.App;
 import me.anany.weikandian.R;
 import me.anany.weikandian.adapter.HomeTabPagerAdapter;
 import me.anany.weikandian.base.BaseFragment;
-import me.anany.weikandian.db.dao.DaoSession;
-import me.anany.weikandian.db.dao.DaoUtil;
-import me.anany.weikandian.db.dao.HomeTitleDBDao;
-import me.anany.weikandian.db.entity.HomeTitleDB;
-import me.anany.weikandian.model.HomeTitleData;
+import me.anany.weikandian.db.HomeTitleDao;
+import me.anany.weikandian.entry.HomeTitle;
+import me.anany.weikandian.entry.HomeTitleData;
 import me.anany.weikandian.retrofit.RxApiThread;
 import me.anany.weikandian.ui.activity.AddHomeChannelActivity;
 import me.anany.weikandian.ui.pager.HomePager;
 import me.anany.weikandian.utils.LogUtil;
-
-import java.util.ArrayList;
-import java.util.List;
+import rx.Subscription;
 
 /**
  * Created by anany on 16/1/6.  首页新闻 Fragment
@@ -35,11 +34,15 @@ public class HomeFragment extends BaseFragment {
     private static final int FROM_DB = 1;
     private static final int ADD_CHANNEL = 1000;
 
-    @Bind(R.id.vp_home) ViewPager mViewPager;
+    @Bind(R.id.vp_home)
+    ViewPager mViewPager;
 
-    @Bind(R.id.tab_layout) TabLayout mTabLayout;
+    @Bind(R.id.tab_layout)
+    TabLayout mTabLayout;
 
     private boolean hasInitData = false;
+    private ArrayList<HomePager> pagerList;
+    private Subscription getTitleSubscribe;
 
     @Override
     protected int inflateLayoutId() {
@@ -50,7 +53,7 @@ public class HomeFragment extends BaseFragment {
     void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_add_channel:
-                Intent intent = new Intent(mActivity, AddHomeChannelActivity.class);
+                Intent intent = new Intent(context, AddHomeChannelActivity.class);
                 startActivityForResult(intent, ADD_CHANNEL);
                 break;
         }
@@ -58,79 +61,50 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void initViews() {
-
         if (!hasInitData) {
+            HomeTitleDao homeTitleDao = App.getDaoSession().getHomeTitleDao();
+            List<HomeTitle> homeTitleItemsDB = homeTitleDao.queryBuilder().build().list();
 
-            // 先从数据库取出所有Title，没有的话重新从网络获取
-            List<HomeTitleDB> homeTitleDataItems = DaoUtil.getHomeTitleList(mActivity);
-
-            if (homeTitleDataItems != null && !homeTitleDataItems.isEmpty()) {
-
-                List<HomeTitleData.HomeTitleItem> homeTitleItems = new ArrayList<>();
-
-                for (HomeTitleDB homeTitleDB : homeTitleDataItems) {
-                    HomeTitleData.HomeTitleItem homeTitleItem =
-                            new HomeTitleData.HomeTitleItem();
-                    homeTitleItem.setName(homeTitleDB.getName());
-                    homeTitleItem.setId(homeTitleDB.getCat_id());
-                    homeTitleItems.add(homeTitleItem);
-                }
-
-                handleResponseData(homeTitleItems, FROM_DB);
-
-            } else {
-
-                App.getApi().getHomeNewsTitle("WIFI", "2.0.4", "c1005", "Nexus 4",
-                        "android", "6416405", "7f08bcd287cc5096", "22",
-                        "5.1.1", "1", "1452050427", "9279697", "204",
-                        "6b64883a89dbf5c36d669baa1bced5de")
+            if (homeTitleItemsDB.isEmpty()) {   // 先从数据库取出所有Title，没有的话重新从网络获取
+                getTitleSubscribe = App.getApi().getHomeNewsTitle("WIFI", "c1004",
+                        "3.4.1", "341", "android")
                         .compose(RxApiThread.convert())
-                        .compose(bindUntilEvent(FragmentEvent.PAUSE))
                         .map(HomeTitleData::getItems)
                         .subscribe(homeTitleItems ->
                                 handleResponseData(homeTitleItems, FROM_NET_WORK), e -> {
                             LogUtil.e(e.getMessage());
                         });
+            } else {
+                handleResponseData(homeTitleItemsDB, FROM_DB);
             }
-
         }
     }
 
-
-    /**
-     * 处理从服务器获取的顶部Title数据
-     */
-    private void handleResponseData(List<HomeTitleData.HomeTitleItem> homeTitleDataItems, int type) {
-
+    private void handleResponseData(List<HomeTitle> homeTitleItems, int type) {
         hasInitData = true;
 
-        // Title文字的List
         List<String> titleTextList = new ArrayList<>();
-        titleTextList.add("推荐");// 推荐页要单独处理
+        titleTextList.add("推荐");
 
-        // 内容页Pager的List
-        List<HomePager> pagerList = new ArrayList<>();
+        pagerList = new ArrayList<>();
+        pagerList.add(new HomePager(context));
 
-        // 初始化推荐页
-        pagerList.add(new HomePager(mActivity));
-
-        for (HomeTitleData.HomeTitleItem homeTitleDataItem : homeTitleDataItems) {
-            pagerList.add(new HomePager(mActivity));
-            titleTextList.add(homeTitleDataItem.getName());
+        for (HomeTitle homeTitle : homeTitleItems) {
+            pagerList.add(new HomePager(context));
+            titleTextList.add(homeTitle.getName());
         }
 
         HomeTabPagerAdapter mAdapter = new HomeTabPagerAdapter(pagerList, titleTextList);
-        mTabLayout.setTabsFromPagerAdapter(mAdapter);
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setCurrentItem(0);
-
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             private int position;
 
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset,
+                                       int positionOffsetPixels) {
 
             }
 
@@ -142,51 +116,41 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onPageScrollStateChanged(int state) {
 
-                // 当滑动结束的时候，才去加载数据。实现【当快速切换ViewPager的时候不会加载数据】
+                // 当滑动停止的时候，才去加载数据
                 if (state == 0) {
-
-                    String catid;// 每页请求的catid
-
-                    // 当position == 0 时，catid == 0; 其他从集合中取catid
                     if (position == 0) {
-                        catid = "0";
+                        pagerList.get(position).refreshData("0");
                     } else {
-                        catid = homeTitleDataItems.get(position - 1).getId();
+                        String catId = homeTitleItems.get(position - 1).getId();
+                        pagerList.get(position).refreshData(catId);
                     }
-
-                    // 执行了initData方法，HomePager才会去联网获取数据
-                    pagerList.get(position).initData(catid, position);
-                    pagerList.get(position).setPagerHasInitData(true);
-                    pagerList.get(position).setRecyclerItemClickPosition(Integer.toString(position));
                 }
             }
         });
 
-        pagerList.get(0).initData("0", 0);
-        pagerList.get(0).setPagerHasInitData(true);
+        mViewPager.postDelayed(() -> pagerList.get(0).refreshData("0"), 200);
 
         if (type == FROM_NET_WORK) {
-
             new Thread(() -> {
-                saveHomeTitleDataToDB(homeTitleDataItems);
+                saveHomeTitleDataToDB(homeTitleItems);
             }).start();
         }
-
     }
 
-    /**
-     * 保存Title数据到数据库
-     */
-    private void saveHomeTitleDataToDB(List<HomeTitleData.HomeTitleItem> homeTitleDataItems) {
+    private void saveHomeTitleDataToDB(List<HomeTitle> homeTitleDataItems) {
+        HomeTitleDao homeTitleDao = App.getDaoSession().getHomeTitleDao();
+        homeTitleDao.deleteAll();
+        homeTitleDao.insertInTx(homeTitleDataItems);
+    }
 
-        DaoSession daoSession = App.getDaoSession(mActivity);
-        HomeTitleDBDao homeTitleDao = daoSession.getHomeTitleDBDao();
-
-        for (HomeTitleData.HomeTitleItem item : homeTitleDataItems) {
-            HomeTitleDB homeTitle = new HomeTitleDB();
-            homeTitle.setName(item.getName());
-            homeTitle.setCat_id(item.getId());
-            homeTitleDao.insert(homeTitle);
+    @Override
+    public void onDestroy() {
+        if (getTitleSubscribe != null) {
+            getTitleSubscribe.unsubscribe();
         }
+        for (HomePager homePager : pagerList) {
+            homePager.onDestroy();
+        }
+        super.onDestroy();
     }
 }

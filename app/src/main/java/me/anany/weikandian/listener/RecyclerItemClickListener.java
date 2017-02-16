@@ -7,7 +7,7 @@ import android.view.View;
 import java.util.List;
 
 import me.anany.weikandian.adapter.HomeRecyclerViewAdapter;
-import me.anany.weikandian.model.HomeNewsDataItem;
+import me.anany.weikandian.entry.HomeNewsData;
 import me.anany.weikandian.ui.activity.HomeNewsDetailActivity;
 
 /**
@@ -17,31 +17,17 @@ import me.anany.weikandian.ui.activity.HomeNewsDetailActivity;
  */
 public class RecyclerItemClickListener implements HomeRecyclerViewAdapter.ClickListener {
 
-    private String mPosition;
     private Context mContext;
 
-    public RecyclerItemClickListener(Context context, String position) {
+    public RecyclerItemClickListener(Context context) {
         mContext = context;
-        mPosition = position;
     }
 
     @Override
-    public void onItemClick(int itemListPosition, View v, List<HomeNewsDataItem> items) {
+    public void onItemClick(int itemListPosition, View v, List<HomeNewsData.ItemsBean> items) {
 
         Intent intent = new Intent(mContext, HomeNewsDetailActivity.class);
-
-        if ("0".equals(mPosition) && itemListPosition > 1) {
-            // 推荐页的列表，因为有头部header，所以数据position会有变化
-            intent.putExtra("news_data", items.get(itemListPosition - 2));
-
-        } else {
-            intent.putExtra("news_data", items.get(itemListPosition - 1));
-
-        }
+        intent.putExtra("news_data", items.get(itemListPosition - 1));
         mContext.startActivity(intent);
-    }
-
-    public void setPagerPosition(String position) {
-        this.mPosition = position;
     }
 }

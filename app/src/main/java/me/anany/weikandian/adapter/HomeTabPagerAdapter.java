@@ -3,10 +3,11 @@ package me.anany.weikandian.adapter;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import me.anany.weikandian.ui.pager.HomePager;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import me.anany.weikandian.ui.pager.HomePager;
 
 /**
  * Created by anany on 16/1/8.
@@ -23,10 +24,6 @@ public class HomeTabPagerAdapter extends PagerAdapter {
 
     private LinkedHashMap<Integer, View> views = new LinkedHashMap<>();
 
-    /**
-     * @param pagerList          内容页Pager的集合
-     * @param titleTextList      Title 文字的集合
-     */
     public HomeTabPagerAdapter(List<HomePager> pagerList, List<String> titleTextList) {
         this.pagerList = pagerList;
         this.titleTextList = titleTextList;
@@ -44,18 +41,12 @@ public class HomeTabPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-
         HomePager homePager = pagerList.get(position);
-
-        View view = views.get(position);// 从缓存中去取View
-
+        View view = views.get(position);
         if (view == null) {
-
-            view = homePager.inflateView(Integer.toString(position));
-
+            view = homePager.inflateView();
             views.put(position, view);
         }
-
         container.addView(view);
         return view;
     }

@@ -6,14 +6,15 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import java.lang.reflect.Field;
+
 import butterknife.Bind;
 import butterknife.OnClick;
 import me.anany.weikandian.BuildConfig;
 import me.anany.weikandian.R;
 import me.anany.weikandian.base.BaseActivity;
-import me.anany.weikandian.model.HomeNewsDataItem;
-
-import java.lang.reflect.Field;
+import me.anany.weikandian.entry.HomeNewsData;
 
 import static me.anany.weikandian.R.id.pb_title;
 
@@ -61,7 +62,7 @@ public class HomeNewsDetailActivity extends BaseActivity {
 
     private void initData() {
 
-        HomeNewsDataItem newsDataItem = (HomeNewsDataItem) getIntent().
+        HomeNewsData.ItemsBean newsDataItem = (HomeNewsData.ItemsBean) getIntent().
                 getSerializableExtra("news_data");
 
         if (newsDataItem != null) {
@@ -76,8 +77,6 @@ public class HomeNewsDetailActivity extends BaseActivity {
                     if (newProgress == 100) {
                         // 网页加载完成
                         mProgressBarTitle.setVisibility(View.INVISIBLE);
-                    } else {
-
                     }
                 }
             });

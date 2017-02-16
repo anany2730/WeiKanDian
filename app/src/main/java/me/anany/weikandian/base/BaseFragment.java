@@ -1,13 +1,12 @@
 package me.anany.weikandian.base;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.trello.rxlifecycle.components.support.RxFragment;
 
 import butterknife.ButterKnife;
 import me.anany.weikandian.utils.LogUtil;
@@ -17,18 +16,16 @@ import me.anany.weikandian.utils.LogUtil;
  * <p/>
  * Created by anany
  */
-public abstract class BaseFragment extends RxFragment {
+public abstract class BaseFragment extends Fragment {
 
-    public Activity mActivity;
-
+    protected Context context;
     protected boolean isVisible;
-
     private View rootView;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mActivity = activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
         prepare();
     }
 
@@ -41,14 +38,10 @@ public abstract class BaseFragment extends RxFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         LogUtil.e("Fragment onCreateView");
-
         rootView = inflater.inflate(inflateLayoutId(), container, false);
         ButterKnife.bind(this, rootView);
-
         initViews();
-
         return rootView;
     }
 
@@ -66,11 +59,13 @@ public abstract class BaseFragment extends RxFragment {
     @LayoutRes
     protected abstract int inflateLayoutId();
 
-    protected void initViews() {}
+    protected void initViews() {
+    }
 
-    protected void prepare(){}
+    protected void prepare() {
+    }
 
-    public View getRootView(){
+    public View getRootView() {
         return rootView;
     }
 }

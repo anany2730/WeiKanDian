@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     compileSdkVersion 23
@@ -33,6 +34,12 @@ android {
 
 }
 
+greendao {
+    schemaVersion 1
+    daoPackage 'me.anany.weikandian.db'
+    targetGenDir 'src/main/java'
+}
+
 
 dependencies {
 
@@ -52,9 +59,7 @@ dependencies {
     compile 'io.reactivex:rxjava:1.2.5'
     compile 'io.reactivex:rxandroid:1.2.1'
 
-    compile 'com.trello:rxlifecycle:0.3.0'
-    compile 'com.trello:rxlifecycle-components:0.3.0'
-
     compile 'com.jcodecraeer:xrecyclerview:1.3.2'
-    compile 'de.greenrobot:greendao:2.1.0'
+    compile 'org.greenrobot:greendao:3.2.0'
+    compile 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v1.3.0'
 }
