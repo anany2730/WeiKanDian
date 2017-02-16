@@ -1,14 +1,14 @@
 # WeiKanDian
 微看点Android客户端
 
-![](http://7xijtp.com1.z0.glb.clouddn.com/wkd_pic.png?imageView/1/w/480/h/800)
+![](./screenshot/device-2017-02-16-165622.png)
 
 ## 项目介绍
 
 * OkHttp、Retrofit2.0 网络访问，RxJava 链式调用、线程切换
 * Java8 Lambda 的简单使用
 * FragmentTabHost 底部 Tab 切换
-* GreenDao 数据库本地缓存
+* GreenDao3.0 数据库本地缓存
 * RecyclerView 实现首页新闻多 item 布局
 * TabLayout 实现首页顶部 Tab 切换
 * 顶部 Tab 切换的 adapter 实现了延迟加载、并复用了加载过的 Tab
