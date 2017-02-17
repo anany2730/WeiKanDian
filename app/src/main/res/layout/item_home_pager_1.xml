@@ -6,26 +6,23 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-
+        android:layout_height="120dp"
+        android:padding="10dp"
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="90dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
-
 
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|left"
-                android:layout_marginTop="10dp"
                 android:textColor="@color/black"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
 
@@ -43,8 +40,7 @@
                     android:id="@+id/tv_account_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="热点资讯大全"
-                    android:textSize="10sp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_read_num"
@@ -53,8 +49,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/tv_account_name"
-                    android:text="1067"
-                    android:textSize="10sp" />
+                    android:textSize="12sp" />
 
                 <ImageView
                     android:id="@+id/iv_delete"
@@ -73,7 +68,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_toLeftOf="@id/iv_delete"
                     android:text="刚刚"
-                    android:textSize="10sp" />
+                    android:textSize="12sp" />
 
 
             </RelativeLayout>
@@ -81,20 +76,20 @@
 
         </RelativeLayout>
 
-
         <ImageView
-
             android:id="@+id/iv_main_img"
-            android:layout_width="100dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp" />
+            android:layout_width="130dp"
+            android:layout_marginLeft="10dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@color/tv_line" />
 
 </LinearLayout>

@@ -1,7 +1,6 @@
 package me.anany.weikandian.ui.pager;
 
 import android.content.Context;
-import android.os.SystemClock;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -17,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 import me.anany.weikandian.App;
 import me.anany.weikandian.R;
 import me.anany.weikandian.adapter.HomeRecyclerViewAdapter;
-import me.anany.weikandian.listener.RecyclerItemClickListener;
 import me.anany.weikandian.entry.HomeNewsData;
+import me.anany.weikandian.listener.RecyclerItemClickListener;
 import me.anany.weikandian.retrofit.RxApiThread;
 import me.anany.weikandian.utils.LogUtil;
 import rx.Subscription;
@@ -88,7 +87,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
         this.catId = catId;
         if (!hasInitData) {
             Subscription subscribe = App.getApi().getHomeNewsData(catId, pullStep, 0,
-                    13946282, SystemClock.currentThreadTimeMillis())
+                    13946282, System.currentTimeMillis())
                     .compose(RxApiThread.convert())
                     .subscribe(homeNewsData -> {
                         hasInitData = true;
@@ -107,7 +106,7 @@ public class HomePager implements XRecyclerView.LoadingListener {
             getMoreSubscribe.unsubscribe();
         }
         getMoreSubscribe = App.getApi().getHomeNewsDataMore(catId, moreStep,
-                1, 13946282, SystemClock.currentThreadTimeMillis())
+                1, 13946282, System.currentTimeMillis())
                 .delay(500, TimeUnit.MILLISECONDS)
                 .compose(RxApiThread.convert())
                 .subscribe(homeNewsData -> {

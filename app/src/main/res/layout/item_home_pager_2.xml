@@ -7,8 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:layout_margin="10dp"
         android:orientation="vertical">
 
         <TextView
@@ -18,14 +17,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|left"
-            android:layout_marginTop="10dp" />
-
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="100dp"
             android:layout_below="@id/tv_title"
-            android:layout_marginTop="5dp"
             android:gravity="center">
 
 
@@ -56,8 +53,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -66,8 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="热点资讯大全"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tv_read_num"
@@ -77,8 +71,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_account_name"
-                android:text="1067"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/iv_delete"
@@ -95,8 +88,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@id/iv_delete"
-                android:text="刚刚"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
 
         </RelativeLayout>
@@ -107,5 +99,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@color/tv_line" />
 </LinearLayout>
