@@ -12,15 +12,14 @@
         android:paddingRight="10dp"
         android:orientation="vertical">
 
-
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|left"
             android:layout_marginTop="10dp"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:textSize="16sp"
+            android:textColor="@color/black" />
 
         <ImageView
             android:id="@+id/iv_main_img"
@@ -54,7 +53,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/iv_op_mark"
                 android:text="专题"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tv_account_name"
@@ -63,7 +62,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_op_mark"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tv_read_num"
@@ -74,7 +73,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/tv_account_name"
                 android:text="1067"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tv_time"
@@ -84,7 +83,7 @@
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@id/iv_delete"
                 android:text="刚刚"
-                android:textSize="10sp" />
+                android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/iv_delete"
@@ -97,12 +96,13 @@
                 android:background="@mipmap/ic_article_delete" />
         </RelativeLayout>
 
-
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@color/tv_line" />
 
 </LinearLayout>

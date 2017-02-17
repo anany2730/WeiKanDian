@@ -50,19 +50,20 @@
                         android:textSize="12sp" />
 
 
-                    <Button
+                    <TextView
                         android:id="@+id/btn_sort"
                         android:layout_width="70dp"
                         android:layout_height="30dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
+                        android:gravity="center"
                         android:background="@drawable/shape_btn_add_channel"
                         android:text="排序/删除"
                         android:textColor="@color/main_green"
                         android:textSize="10sp" />
 
-                    <Button
+                    <TextView
                         android:id="@+id/btn_add_channel"
                         android:layout_width="70dp"
                         android:layout_height="30dp"
@@ -70,6 +71,7 @@
                         android:layout_toLeftOf="@id/btn_sort"
                         android:background="@drawable/shape_btn_add_channel"
                         android:text="添加频道"
+                        android:gravity="center"
                         android:textColor="@color/main_green"
                         android:textSize="10sp" />
                 </RelativeLayout>
